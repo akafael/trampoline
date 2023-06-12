@@ -3,7 +3,7 @@ IMPLEMENTATION avrArduino {
     BOOLEAN [
       TRUE {
         ENUM [
-          advancedIO,serial,spi,i2c,eeprom,softwareSerial,print
+          advancedIO,serial,spi,i2c,eeprom,softwareSerial,print,mcp_can
         ] LIBRARY[];
       },
       FALSE
@@ -96,6 +96,12 @@ CPU avrArduino {
     NEEDS   = print;
     PATH    = "avr/arduino/libraries/SoftwareSerial/src";
     CPPFILE = "SoftwareSerial.cpp";
+  };
+
+  LIBRARY mcp_can {
+    NEEDS   = spi;
+    PATH    = "avr/arduino/libraries/mcp_can/src";
+    CPPFILE = "mcp_can.cpp";
   };
   
   // not used (at this date):
