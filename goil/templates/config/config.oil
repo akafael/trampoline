@@ -59,6 +59,7 @@ IMPLEMENTATION trampoline_common {
    */
   PLATFORM_FILES [] {
     STRING PATH;
+    IDENTIFIER WITH_AUTO IF = AUTO;
     STRING CFILE[];
     STRING CPPFILE[];
     STRING ASFILE[];
@@ -68,10 +69,11 @@ IMPLEMENTATION trampoline_common {
    * Libraries to add to the build system
    */
   LIBRARY [] {
-    LIBRARY_TYPE NEEDS [];
+    BOOLEAN GLOBAL = FALSE;
+    STRING PATH;
+    LIBRARY_TYPE NEEDS[];
     STRING CHEADER[];
     STRING CPPHEADER[];
-    STRING PATH;
     STRING CFILE[];
     STRING CPPFILE[];
     STRING ASFILE[];
@@ -155,6 +157,7 @@ IMPLEMENTATION trampoline_common {
   };
 
   OS {
+    STRING IDLE_NAME = "idle_function";
     /* Standard OIL attributes */
     ENUM [STANDARD, EXTENDED] STATUS;
     BOOLEAN [

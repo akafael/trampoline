@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  Implementation of routines for handling dynamic allocation checking.                         
 //
@@ -16,28 +16,28 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "utilities/M_machine.h"
-#include "utilities/MF_MemoryControl.h"
-#include "utilities/cpp-allocation.h"
-#include "utilities/basic-allocation.h"
+#include "M_machine.h"
+#include "MF_MemoryControl.h"
+#include "cpp-allocation.h"
+#include "basic-allocation.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include <stdio.h>
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-//#define REGISTER_ALLOCATION_STATS
-//#define REDEFINE_NEW_DELETE_OPERATORS
+// define REGISTER_ALLOCATION_STATS
+// define REDEFINE_NEW_DELETE_OPERATORS
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Include this header is required for safely compile allocation operators.
 
 #include <new>
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifndef DO_NOT_GENERATE_CHECKINGS
   #ifndef REGISTER_ALLOCATION_STATS
@@ -45,7 +45,7 @@
   #endif
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifndef DO_NOT_GENERATE_CHECKINGS
   #ifndef REDEFINE_NEW_DELETE_OPERATORS
@@ -53,13 +53,13 @@
   #endif
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifndef DO_NOT_GENERATE_CHECKINGS
   static int32_t gAllocProloguePendings = 0 ;
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef REGISTER_ALLOCATION_STATS
   static uint32_t gBlockAllocatedWithoutUsingMacroMyNew = 0 ;
@@ -70,7 +70,7 @@
   static uint32_t gAllocatedArrayCount = 0 ;
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifndef DO_NOT_GENERATE_CHECKINGS
   void prologueForNew (void) {
@@ -78,7 +78,7 @@
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef REDEFINE_NEW_DELETE_OPERATORS
   void * operator new (size_t inSizeInBytes) {
@@ -88,10 +88,10 @@
       }
       gAllocProloguePendings -- ;
     #endif
-    void * result = NULL ;
+    void * result = nullptr ;
     if (inSizeInBytes > 0) {
       result = ::myAllocRoutine (inSizeInBytes) ;
-      if (NULL == result) {
+      if (nullptr == result) {
         throw std::bad_alloc () ;
       }
       #ifdef REGISTER_ALLOCATION_STATS
@@ -103,7 +103,7 @@
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef REDEFINE_NEW_DELETE_OPERATORS
   void * operator new [] (size_t inSizeInBytes) {
@@ -113,10 +113,10 @@
       }
       gAllocProloguePendings -- ;
     #endif
-    void * result = NULL ;
+    void * result = nullptr ;
     if (inSizeInBytes > 0) {
       result = ::myAllocRoutine (inSizeInBytes) ;
-      if (NULL == result) {
+      if (nullptr == result) {
         throw std::bad_alloc () ;
       }
       #ifdef REGISTER_ALLOCATION_STATS
@@ -128,11 +128,11 @@
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef REDEFINE_NEW_DELETE_OPERATORS
   void operator delete (void * inPointer) noexcept {
-    if (inPointer != NULL) {
+    if (inPointer != nullptr) {
       ::myFreeRoutine (inPointer) ;
       #ifdef REGISTER_ALLOCATION_STATS
         gCurrentObjectCount -- ;
@@ -141,11 +141,11 @@
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef REDEFINE_NEW_DELETE_OPERATORS
   void operator delete (void * inPointer, std::size_t) noexcept {
-    if (inPointer != NULL) {
+    if (inPointer != nullptr) {
       ::myFreeRoutine (inPointer) ;
       #ifdef REGISTER_ALLOCATION_STATS
         gCurrentArrayCount -- ;
@@ -154,11 +154,11 @@
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef REDEFINE_NEW_DELETE_OPERATORS
   void operator delete [] (void * inPointer) noexcept {
-    if (inPointer != NULL) {
+    if (inPointer != nullptr) {
       ::myFreeRoutine (inPointer) ;
       #ifdef REGISTER_ALLOCATION_STATS
         gCurrentArrayCount -- ;
@@ -167,11 +167,11 @@
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef REDEFINE_NEW_DELETE_OPERATORS
   void operator delete [] (void * inPointer, std::size_t) noexcept {
-    if (inPointer != NULL) {
+    if (inPointer != nullptr) {
       ::myFreeRoutine (inPointer) ;
       #ifdef REGISTER_ALLOCATION_STATS
         gCurrentArrayCount -- ;
@@ -180,7 +180,7 @@
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void displayAllocationStats (void) {
   #ifdef REGISTER_ALLOCATION_STATS
@@ -200,4 +200,4 @@ void displayAllocationStats (void) {
   #endif
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

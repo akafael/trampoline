@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  'C_ConsoleOut' : a class for console output                                                  
 //
 //  This file is part of libpm library                                                           
 //
-//  Copyright (C) 2002, ..., 2011 Pierre Molinaro.
+//  Copyright (C) 2002, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,17 +16,17 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include "C_ColoredConsole.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class C_ConsoleOut : public C_ColoredConsole {
+class C_ConsoleOut final : public C_ColoredConsole {
 //--- Constructor
   public: C_ConsoleOut (void) ;
 
@@ -34,21 +34,18 @@ class C_ConsoleOut : public C_ColoredConsole {
   public: virtual void flush (void) ;
   
 //--- General stream method
-  protected: virtual void
-  performActualCharArrayOutput (const char * inCharArray,
-                                const int32_t inArrayCount) ;
+  protected: virtual void handleAppendUTF8Array (const char * inCharArray,
+                                                 const int32_t inArrayCount) ;
 
-  protected: virtual void
-  performActualUnicodeArrayOutput (const utf32 * inCharArray, const int32_t inArrayCount) ;
-
+  protected: virtual void handleAppendCharacter (const utf32 inCharacter) ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  C O N S O L E    O U T    G L O B A L   V A R I A B L E                                      
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-extern C_ConsoleOut co ;
+extern C_ConsoleOut gCout ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

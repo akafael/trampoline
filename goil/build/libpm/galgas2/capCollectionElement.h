@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  GALGAS_enumerable : Base class for GALGAS enumerable object                                  
 //
@@ -16,23 +16,23 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "utilities/C_SharedObject.h"
-#include "galgas2/typeComparisonResult.h"
+#include "SharedObject.h"
+#include "typeComparisonResult.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class C_String ;
+class String ;
 class cCollectionElement ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class capCollectionElement {
+class capCollectionElement final {
 //--- Private pointer
   private: cCollectionElement * mPtr ;
 
@@ -40,7 +40,7 @@ class capCollectionElement {
   public: capCollectionElement (void) ;
 
 //--- Destructor
-  public: virtual ~ capCollectionElement (void) ;
+  public: ~ capCollectionElement (void) ;
 
 //--- Handle copy
   public: capCollectionElement (const capCollectionElement & inSource) ;
@@ -69,7 +69,7 @@ class capCollectionElement {
   public: capCollectionElement copy (void) ;
 
 //--- Description
- public: void description (C_String & ioString, const int32_t inIndentation) const ;
+ public: void description (String & ioString, const int32_t inIndentation) const ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

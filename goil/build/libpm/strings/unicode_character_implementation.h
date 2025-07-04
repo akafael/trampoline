@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  unicode_character : an implementation of Unicode character                                   
 //
@@ -16,12 +16,12 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 const utf32 UNICODE_REPLACEMENT_CHARACTER = TO_UNICODE (0x0000FFFD) ;
 const utf32 UNICODE_MAX_LEGAL_UTF32_CHARACTER = TO_UNICODE (0x0010FFFF) ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeCharacterAssigned (const utf32 inUnicodeCharacter) {
   bool result = UNICODE_VALUE (inUnicodeCharacter) <= UNICODE_VALUE (UNICODE_MAX_LEGAL_UTF32_CHARACTER) ;
@@ -38,7 +38,7 @@ bool isUnicodeCharacterAssigned (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // Each entry is a sequence of uint values. The two significant bits encode
 // the meaning of the entry:
 //  - 00xx xxx : shift accumulator left 6 bits,
@@ -59,10 +59,10 @@ bool isUnicodeCharacterAssigned (const utf32 inUnicodeCharacter) {
 //               EXIT.
 
 #ifdef __cplusplus
-  C_String unicodeName (const utf32 inUnicodeCharacter) {
-    C_String result ;
+  String unicodeName (const utf32 inUnicodeCharacter) {
+    String result ;
     if (! isUnicodeCharacterAssigned (inUnicodeCharacter)) {
-      result << "invalid unicode character \\U" ;
+      result.appendCString ("invalid unicode character \\U") ;
       result.appendUnsignedHex8 (UNICODE_VALUE (inUnicodeCharacter)) ;
     }else{
       const uint32_t pageIndex = UNICODE_VALUE (inUnicodeCharacter) / gNamePageSize ;
@@ -80,15 +80,17 @@ bool isUnicodeCharacterAssigned (const utf32 inUnicodeCharacter) {
             case 0 : // Prefix
               break ;
             case 0x40 : // Enter name, append space character
-              result << gPartNames [idx] << " " ;
+              result.appendString (gPartNames [idx]) ;
+              result.appendCString (" ") ;
               idx = 0 ;
               break ;
             case 0x80 : // Enter name, append minus character
-              result << gPartNames [idx] << "-" ;
+              result.appendString (gPartNames [idx]) ;
+              result.appendCString ("-") ;
               idx = 0 ;
               break ;
             default : // Enter name, exit
-              result << gPartNames [idx] ;
+              result.appendString (gPartNames [idx]) ;
               completed = true ;
               break ;
             }
@@ -97,10 +99,10 @@ bool isUnicodeCharacterAssigned (const utf32 inUnicodeCharacter) {
       }
       if (result.length () == 0) {
         if (UNICODE_VALUE (inUnicodeCharacter) < 0x10000) {
-          result << "\\u" ;
+          result.appendCString ("\\u") ;
           result.appendUnsignedHex4 (UNICODE_VALUE (inUnicodeCharacter)) ;
         }else{
-          result << "\\U" ;
+          result.appendCString ("\\U") ;
           result.appendUnsignedHex8 (UNICODE_VALUE (inUnicodeCharacter)) ;
         }
       }
@@ -109,7 +111,7 @@ bool isUnicodeCharacterAssigned (const utf32 inUnicodeCharacter) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef __OBJC__
   NSString * unicodeName (const utf32 inUnicodeCharacter) {
@@ -159,7 +161,7 @@ bool isUnicodeCharacterAssigned (const utf32 inUnicodeCharacter) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 utf32 unicodeToLower (const utf32 inUnicodeCharacter) {
   utf32 result = inUnicodeCharacter ;
@@ -176,43 +178,58 @@ utf32 unicodeToLower (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 utf32 unicodeToUpper (const utf32 inUnicodeCharacter) {
   utf32 result = inUnicodeCharacter ;
-  // printf ("U+%X", inUnicodeCharacter) ;
   const uint32_t pageIndex = UNICODE_VALUE (inUnicodeCharacter) / gToUpperPageSize ;
   if (pageIndex <= gLastToUpperPage) {
     const uint32_t * page = gToUpperPages [pageIndex] ;
     if (page != NULL) {
-      // printf (", index %u", inUnicodeCharacter % gToUpperPageSize) ;
       const uint32_t entry = page [UNICODE_VALUE (inUnicodeCharacter) % gToUpperPageSize] ;
-      // printf (", entry 0x%X", entry) ;
       if (entry != 0) {
         result = TO_UNICODE (entry) ;
       }
     }
   }
-  // printf ("\n") ;
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeLetter (const utf32 inUnicodeCharacter) {
-  return ((0x61 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x7A)) ||
-         ((0x41 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x5A)) ||
-         (0xB5 == UNICODE_VALUE (inUnicodeCharacter)) ||
-         ((0xC0 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0xD6)) ||
-         ((0xD8 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0xF6)) ||
-         ((0xF8 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x2B4)) ||
-         ((0x38E <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x3A1)) ||
-         ((0x3A3 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x3F5)) ||
-         ((0x3F7 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x481)) ||
-         ((0x48A <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x523)) ;
+  bool ok = (0x61 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x7A) ;
+  if (!ok) {
+    ok = (0x41 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x5A) ;
+  }
+  if (!ok) {
+    ok = 0xB5 == UNICODE_VALUE (inUnicodeCharacter) ;
+  }
+  if (!ok) {
+    ok = (0xC0 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0xD6) ;
+  }
+  if (!ok) {
+    ok = (0xD8 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0xF6) ;
+  }
+  if (!ok) {
+    ok = (0xF8 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x2B4) ;
+  }
+  if (!ok) {
+    ok = (0x38E <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x3A1) ;
+  }
+  if (!ok) {
+    ok = (0x3A3 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x3F5) ;
+  }
+  if (!ok) {
+    ok = (0x3F7 <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x481) ;
+  }
+  if (!ok) {
+    ok = (0x48A <= UNICODE_VALUE (inUnicodeCharacter)) && (UNICODE_VALUE (inUnicodeCharacter) <= 0x523) ;
+  }
+  return ok ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeMark (const utf32 inUnicodeCharacter) {
   bool result = false ;
@@ -230,7 +247,7 @@ bool isUnicodeMark (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeNumber (const utf32 inUnicodeCharacter) {
   bool result = false ;
@@ -248,7 +265,7 @@ bool isUnicodeNumber (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeDecimalDigit (const utf32 inUnicodeCharacter) {
   bool result = false ;
@@ -266,7 +283,7 @@ bool isUnicodeDecimalDigit (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 uint32_t unicodeDecimalValue (const utf32 inUnicodeCharacter) {
   uint32_t result = 0 ;
@@ -285,7 +302,7 @@ uint32_t unicodeDecimalValue (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeASCIIHexDigit (const utf32 inUnicodeCharacter) {
   return
@@ -295,7 +312,7 @@ bool isUnicodeASCIIHexDigit (const utf32 inUnicodeCharacter) {
   ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 uint32_t ASCIIHexValue (const utf32 inUnicodeCharacter) {
   uint32_t result = 0 ;
@@ -309,7 +326,7 @@ uint32_t ASCIIHexValue (const utf32 inUnicodeCharacter) {
   return result  ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeSeparator (const utf32 inUnicodeCharacter) {
   bool result = false ;
@@ -327,7 +344,7 @@ bool isUnicodeSeparator (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeCommand (const utf32 inUnicodeCharacter) {
   bool result = true ; // Undefined character has 'Cn' category
@@ -345,7 +362,7 @@ bool isUnicodeCommand (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodePunctuation (const utf32 inUnicodeCharacter) {
   bool result = false ;
@@ -363,7 +380,7 @@ bool isUnicodePunctuation (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool isUnicodeSymbol (const utf32 inUnicodeCharacter) {
   bool result = false ;
@@ -381,7 +398,7 @@ bool isUnicodeSymbol (const utf32 inUnicodeCharacter) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 uint32_t utf8Length (const utf32 inUnicodeCharacter) {
   uint32_t r = 1 ;
@@ -395,10 +412,10 @@ uint32_t utf8Length (const utf32 inUnicodeCharacter) {
   return r ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef __cplusplus
-  utf32 unicodeCharacterFromHTMLSequence (const C_String & inString) {
+  utf32 unicodeCharacterFromHTMLSequence (const String & inString) {
     utf32 result = TO_UNICODE (0) ; // Means not found
     int32_t lowIndex = 0 ;
     int32_t highIndex = kHTMLtoUnicodeConversionTableSize - 1 ;
@@ -417,7 +434,7 @@ uint32_t utf8Length (const utf32 inUnicodeCharacter) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef __OBJC__
   utf32 unicodeCharacterFromHTMLSequence (NSString * inString) {
@@ -439,11 +456,11 @@ uint32_t utf8Length (const utf32 inUnicodeCharacter) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //   S T R I N G    E N C O D I N G S    T A B L E S                                             
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typedef struct {
   const char * mCodeName ;
@@ -452,11 +469,11 @@ typedef struct {
   const uint16_t * mMappingToUnicode ;
 } unicodeMappingDescriptorType ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #define kMappingDescriptorsSize (18)
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 static const unicodeMappingDescriptorType kMappingDescriptors [kMappingDescriptorsSize] = {
   {"ISO 8859-1", gMappingFromUnicodeTo_8859_1, gMappingFromUnicodeTo_8859_1_count, gMappingFrom_8859_1_ToUnicode},
@@ -479,7 +496,7 @@ static const unicodeMappingDescriptorType kMappingDescriptors [kMappingDescripto
   {"Mac Roman", gMappingFromUnicodeTo_ROMAN, gMappingFromUnicodeTo_ROMAN_count, gMappingFrom_ROMAN_ToUnicode}
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 utf32 unicodeCharacterForSingleByteCharacter (const char inChar, const PMStringEncoding inStringEncoding) {
   const unsigned short c = (unsigned short) (((unsigned short) inChar) & 0x00FFU) ;
@@ -493,12 +510,11 @@ utf32 unicodeCharacterForSingleByteCharacter (const char inChar, const PMStringE
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 char singleByteCharacterForUnicodeCharacter (const utf32 inUnicodeChar,
                                              const PMStringEncoding inStringEncoding) {
  char result = '\0' ;
- // printf ("unicode 0x%X\n", inUnicodeChar) ;
  if (UNICODE_VALUE (inUnicodeChar) < 128) {
    result = (char) (UNICODE_VALUE (inUnicodeChar) & 255) ;
  }else if (((uint32_t) inStringEncoding) < kMappingDescriptorsSize) {
@@ -507,13 +523,11 @@ char singleByteCharacterForUnicodeCharacter (const utf32 inUnicodeChar,
    const structConvertFromUnicodeEntry * mapping = kMappingDescriptors [inStringEncoding].mMappingFromUnicode ;
    while ((low <= high) && (result == 0)) {
      const uint32_t mid = (low + high) / 2 ;
-    // printf ("<%u, %u> mid %u unicode 0x%X\n", low, high, mid, mapping [mid].mUnicode) ;
      if (UNICODE_VALUE (inUnicodeChar) > mapping [mid].mUnicode) {
        low = mid + 1 ;
      }else if (UNICODE_VALUE (inUnicodeChar) < mapping [mid].mUnicode) {
        high = mid - 1 ;
      }else{ // Found
-       // printf ("found") ;
        result = mapping [mid].mSingleByteCode ;
      }
    }
@@ -524,7 +538,7 @@ char singleByteCharacterForUnicodeCharacter (const utf32 inUnicodeChar,
  return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // From:
 //   http://www.unicode.org/Public/PROGRAMS/CVTUTF/ConvertUTF.c
 //   http://github.com/lloyd/yajl/blob/d55329340828a736777056f49afd21cb67e2b6b8/src/yajl_encode.c
@@ -563,12 +577,6 @@ int32_t UTF8StringFromUTF32Character (const utf32 inUnicodeChar, char outSequenc
     outSequence [4] = 0 ;
     resultByteCount = 4 ;
   }
-  
-  /*printf ("TO_UNICODE (0x%X) 0x%X ->", UNICODE_VALUE (inUnicodeChar), codePoint) ;
-  for (int32_t i=0 ; i<resultByteCount ; i++) {
-    printf (" 0x%02X", outSequence [i] & 0xFF) ;
-  }
-  printf ("\n") ;*/
   return resultByteCount ;
 }
 
@@ -577,7 +585,7 @@ int32_t UTF8StringFromUTF32Character (const utf32 inUnicodeChar, char outSequenc
 // 0000 0000  0000 0yyy  xxxx xxxx -> 110y yyxx  10xx xxxx
 // 0000 0000  zzzz yyyy  xxxx xxxx -> 1110 zzzz  10yy yyxx  10xx xxxx
 // 000u uuuu  zzzz yyyy  xxxx xxxx -> 1111 0uuu  10uu zzzz  10yy yyxx  10xx xxxx
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef __cplusplus
   utf32 utf32CharacterForPointer (const uint8_t * inDataString,
@@ -640,12 +648,11 @@ int32_t UTF8StringFromUTF32Character (const utf32 inUnicodeChar, char outSequenc
     if (! ioOK) {
       result = UNICODE_VALUE (UNICODE_REPLACEMENT_CHARACTER) ;
     }
-    // printf ("UTF8 -> TO_UNICODE 0x%X (%d), ok %d\n", result, result, ioOK) ;
     return TO_UNICODE (result) ;
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //  https://msdn.microsoft.com/en-us/library/565w213d.aspx (??)
 
 bool isRestrictedUnicodeLetter (const utf32 inUnicodeCharacter) {

@@ -13,6 +13,9 @@ IMPLEMENTATION posix {
         STRING COMPILER = "gcc";
         STRING ASSEMBLER = "gcc";
         STRING LINKER = "gcc";
+        ENUM [
+          can
+        ] LIBRARY[];
       },
       FALSE
     ] BUILD = FALSE;
@@ -55,6 +58,11 @@ CPU posix {
     CFILE = "tpl_posix_irq.c";
     CFILE = "tpl_posix_context.c";
     CFILE = "tpl_posixvp_irq_gen.c";
+  };
+
+  PLATFORM_FILES posix_port_trace {
+    IF = TRACE;
+    PATH = "posix";
     CFILE = "tpl_trace.c";
   };
 
@@ -62,5 +70,15 @@ CPU posix {
     PATH = "../viper";
   };
 
+  LIBRARY net_can_demo_driver {
+    GLOBAL = TRUE;
+    PATH = "drivers/can/posix";
+  };
+
+  LIBRARY can {
+    GLOBAL = TRUE;
+    NEEDS = net_can_demo_driver;
+    PATH = "net/can";
+  };
 };
 

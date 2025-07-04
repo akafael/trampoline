@@ -149,8 +149,51 @@ INTERNAL_RES_SCHEDULER = {
 #define OS_STOP_SEC_VAR_UNSPECIFIED
 #include "tpl_memmap.h"
 
+#define OS_START_SEC_VAR_BOOLEAN
+#include "tpl_memmap.h"
+/*
+ * alarm_callback_running is true if the current triggered alarm is running
+ * a callback routine and false otherwise.
+ */
+STATIC VAR(tpl_bool, OS_VAR) alarm_callback_running = FALSE;
+#define OS_STOP_SEC_VAR_BOOLEAN
+#include "tpl_memmap.h"
+
 #define OS_START_SEC_CODE
 #include "tpl_memmap.h"
+/*
+ * @internal
+ *
+ * tpl_begin_alarm_callback sets alarm_callback_running to TRUE. It is called
+ * from tpl_action_callback function (see tpl_os_action.c file)
+ */
+FUNC(void, OS_CODE) tpl_begin_alarm_callback(void)
+{
+  alarm_callback_running = TRUE;
+}
+
+/*
+ * @internal
+ *
+ * tpl_end_alarm_callback sets alarm_callback_running to FALSE. It is called
+ * from tpl_action_callback function (see tpl_os_action.c file)
+ */
+FUNC(void, OS_CODE) tpl_end_alarm_callback(void)
+{
+  alarm_callback_running = FALSE;
+}
+
+/*
+ * @internal
+ *
+ * tpl_alarm_callback_running returns alarm_callback_running. It is called
+ * from CHECK_NO_CALLBACK_CALL_LEVEL_ERROR macro (see tpl_os_error.h) and
+ * tpl_current_os_state function (see below).
+ */
+FUNC(tpl_bool, OS_CODE) tpl_alarm_callback_running(void)
+{
+  return alarm_callback_running;
+}
 
 #ifdef WITH_DOW
 #include <stdio.h>
@@ -494,7 +537,11 @@ FUNC(tpl_os_state, OS_CODE) tpl_current_os_state(CORE_ID_OR_VOID(core_id))
 
   GET_TPL_KERN_FOR_CORE_ID(core_id, kern)
 
-  if (TPL_KERN_REF(kern).running_id == INVALID_PROC_ID)
+  if (tpl_alarm_callback_running())
+  {
+    state = OS_CALLBACK;
+  }
+  else if (TPL_KERN_REF(kern).running_id == INVALID_PROC_ID)
   {
     state = OS_INIT;
   }
@@ -1087,6 +1134,9 @@ tpl_set_event(CONST(tpl_task_id, AUTOMATIC) task_id,
   {
     result = E_OS_STATE;
   }
+#else
+  (void)task_id;
+  (void)incoming_event;
 #endif
 
   return result;
@@ -1124,6 +1174,7 @@ FUNC(void, OS_CODE) tpl_init_proc(CONST(tpl_proc_id, AUTOMATIC) proc_id)
 FUNC(void, OS_CODE) tpl_init_os(CONST(tpl_application_mode, AUTOMATIC) app_mode)
 {
   GET_CURRENT_CORE_ID(core_id)
+  GET_TPL_KERN_FOR_CORE_ID(core_id, kern)
 #if TASK_COUNT > 0 || ALARM_COUNT > 0 || SCHEDTABLE_COUNT > 0
   VAR(uint16, AUTOMATIC) i;
   CONST(tpl_appmode_mask, AUTOMATIC) app_mode_mask = 1 << app_mode;
@@ -1137,14 +1188,52 @@ FUNC(void, OS_CODE) tpl_init_os(CONST(tpl_application_mode, AUTOMATIC) app_mode)
   P2VAR(tpl_time_obj, AUTOMATIC, OS_APPL_DATA) auto_time_obj;
 #endif
 
-  /*  Start the idle task */
+  /*
+   * Init tpl_ready list and tpl_kern
+   */
+
+#if NUMBER_OF_CORES == 1
+  CONSTP2CONST(tpl_proc_static, AUTOMATIC, OS_CONST)
+  idle_stat = tpl_stat_proc_table[IDLE_TASK_ID];
+  CONSTP2VAR(tpl_proc, AUTOMATIC, OS_VAR)
+  idle = tpl_dyn_proc_table[IDLE_TASK_ID];
+#else
+  CONSTP2CONST(tpl_proc_static, AUTOMATIC, OS_CONST)
+  idle_stat = tpl_stat_proc_table[IDLE_TASK_0_ID + tpl_get_core_id()];
+  CONSTP2VAR(tpl_proc, AUTOMATIC, OS_VAR)
+  idle = tpl_dyn_proc_table[IDLE_TASK_0_ID + tpl_get_core_id()];
+#endif
+
+  READY_LIST(ready_list)[0].key = 0;
+  /* No running task static descriptor                                  */
+  TPL_KERN_REF(kern).s_running = NULL;
+  /* elected task to run is idle task                                   */
+  TPL_KERN_REF(kern).s_elected = idle_stat;
+  /* no running task dynamic descriptor                                 */
+  TPL_KERN_REF(kern).running = NULL;
+  /* elected task to run is idle task                                   */
+  TPL_KERN_REF(kern).elected = idle;
+  /* no running task so no ID                                           */
+  TPL_KERN_REF(kern).running_id = INVALID_PROC_ID;
+  /* idle task has no ID                                                */
+  TPL_KERN_REF(kern).elected_id = INVALID_PROC_ID;
+  /* no context switch needed at start                                  */
+  TPL_KERN_REF(kern).need_switch = NO_NEED_SWITCH;
+  /* no schedule needed at start                                        */
+  TPL_KERN_REF(kern).need_schedule = FALSE;
+#if WITH_MEMORY_PROTECTION == YES
+  /* at early system startup, we run in kernel mode, so in trusted mode */
+  TPL_KERN_REF(kern).running_trusted = 1;
+#endif /* WITH_MEMORY_PROTECTION */
+
+  /* Start the idle task */
 #if NUMBER_OF_CORES == 1
   result = tpl_activate_task(IDLE_TASK_ID);
 #else
   result = tpl_activate_task(IDLE_TASK_0_ID + tpl_get_core_id());
 #endif
 
-  /*  Init the Ioc's unqueued buffer */
+  /* Init the Ioc's unqueued buffer */
 #if ((WITH_IOC == YES) && (IOC_UNQUEUED_COUNT > 0))
 #if NUMBER_OF_CORES > 1
   /* Only one core must do this initialization */

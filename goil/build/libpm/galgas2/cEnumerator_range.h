@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  'cEnumerator_range' : galgas range enumerator                                                
 //
 //  This file is part of libpm library                                                           
 //
-//  Copyright (C) 2012, ..., 2012 Pierre Molinaro.
+//  Copyright (C) 2012, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,28 +16,28 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/cGenericAbstractEnumerator.h"
+#include "cGenericAbstractEnumerator.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class GALGAS_range ;
 class GALGAS_uint ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class cEnumerator_range {
+class cEnumerator_range final {
 //--- Constructor
   public: cEnumerator_range (const GALGAS_range & inEnumeratedRange,
-                              const typeEnumerationOrder inOrder) ;
+                             const typeEnumerationOrder inOrder) ;
 
 //--- Virtual destructor
-  public: virtual ~ cEnumerator_range (void) ;
+  public: ~ cEnumerator_range (void) ;
 
 //--- No copy
   private: cEnumerator_range (const cEnumerator_range &) ;
@@ -59,4 +59,4 @@ class cEnumerator_range {
   private: int64_t mCurrent ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

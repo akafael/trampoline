@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  GALGAS_bool : this class implements introspection for GALGAS types                           
+//  GALGAS_bool : this class implements introspection for GALGAS types
 //
-//  This file is part of libpm library                                                           
+//  This file is part of libpm library
 //
-//  Copyright (C) 2009, ..., 2009 Pierre Molinaro.
+//  Copyright (C) 2009, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,96 +16,96 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include "all-predefined-types.h"
-#include "galgas2/C_Compiler.h"
+#include "Compiler.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//                     'GALGAS_type' class                                                       
+//                     'GALGAS_type' class
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_type::GALGAS_type (void) :
 AC_GALGAS_root (),
-mTypeDescriptor (NULL) {
+mTypeDescriptor (nullptr) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_type::GALGAS_type (const C_galgas_type_descriptor * inTypeReference) :
 AC_GALGAS_root (),
 mTypeDescriptor (inTypeReference) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_type::GALGAS_type (const GALGAS_type & inSource) :
 AC_GALGAS_root (),
 mTypeDescriptor (inSource.mTypeDescriptor) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_type & GALGAS_type::operator = (const GALGAS_type & inSource) {
   mTypeDescriptor = inSource.mTypeDescriptor ;
   return *this ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_type::~ GALGAS_type (void) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-void GALGAS_type::description (C_String & ioString,
+void GALGAS_type::description (String & ioString,
                                const int32_t /* inIndentation */) const {
-  ioString << "<@type: " ;
-  if (NULL == mTypeDescriptor) {
-    ioString << "not built" ;
+  ioString.appendCString ("<@type: ") ;
+  if (nullptr == mTypeDescriptor) {
+    ioString.appendCString ("not built") ;
   }else{
-    ioString << "@" << mTypeDescriptor->mGalgasTypeName ;
+    ioString.appendCString ("@") ;
+    ioString.appendString (mTypeDescriptor->mGalgasTypeName) ;
   }
-  ioString << ">" ;
+  ioString.appendCString (">") ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-GALGAS_typelist GALGAS_type::constructor_typeList (LOCATION_ARGS) {
+GALGAS_typelist GALGAS_type::class_func_typeList (LOCATION_ARGS) {
   TC_UniqueArray <C_galgas_type_descriptor *> typeList ;
   C_galgas_type_descriptor::typeListRoot (typeList) ;
-  GALGAS_typelist result = GALGAS_typelist::constructor_emptyList (THERE) ;
+  GALGAS_typelist result = GALGAS_typelist::class_func_emptyList (THERE) ;
   for (int32_t i=0 ; i<typeList.count () ; i++) {
     result.addAssign_operation (GALGAS_type (typeList (i COMMA_THERE)) COMMA_HERE) ;
   }
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_string GALGAS_type::getter_name (UNUSED_LOCATION_ARGS) const {
   return GALGAS_string (mTypeDescriptor->mGalgasTypeName) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_bool GALGAS_type::getter_hasSuperclass (UNUSED_LOCATION_ARGS) const {
-  return GALGAS_bool (NULL != mTypeDescriptor->mSuperclassDescriptor) ;
+  return GALGAS_bool (nullptr != mTypeDescriptor->mSuperclassDescriptor) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-GALGAS_type GALGAS_type::getter_superclass (C_Compiler * inCompiler
+GALGAS_type GALGAS_type::getter_superclass (Compiler * inCompiler
                                               COMMA_LOCATION_ARGS) const {
   GALGAS_type result ;
-  if (mTypeDescriptor != NULL) {
-    if (NULL == mTypeDescriptor->mSuperclassDescriptor) {
-      C_String s ;
-      s << "'superclass' reader invoked on class type value '@"
-        << mTypeDescriptor->mGalgasTypeName << "', without super class"
-      ;
+  if (mTypeDescriptor != nullptr) {
+    if (nullptr == mTypeDescriptor->mSuperclassDescriptor) {
+      String s = "'superclass' reader invoked on class type value '@" ;
+      s.appendString (mTypeDescriptor->mGalgasTypeName) ;
+      s.appendCString ("', without super class") ;
       inCompiler->onTheFlyRunTimeError (s COMMA_THERE) ;
     }else{
       result = GALGAS_type (mTypeDescriptor->mSuperclassDescriptor) ;
@@ -114,23 +114,21 @@ GALGAS_type GALGAS_type::getter_superclass (C_Compiler * inCompiler
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typeComparisonResult GALGAS_type::objectCompare (const GALGAS_type & inOperand) const {
   typeComparisonResult result = kOperandNotValid ;
   if (isValid () && inOperand.isValid ()) {
     const ptrdiff_t diff = mTypeDescriptor - inOperand.mTypeDescriptor ;
-    // printf ("GALGAS_type::objectCompare %p, %p, diff %d\n", inOperand1.mTypeDescriptor, inOperand2.mTypeDescriptor, diff) ;
     if (diff < 0) {
       result = kFirstOperandLowerThanSecond ;
     }else if (diff > 0) {
       result = kFirstOperandGreaterThanSecond ;
     }else{
       result = kOperandEqual ;
-      // printf ("EQUAL\n") ;
     }
   }
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

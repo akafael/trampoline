@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  Collection of macros for determining machine and compiler.                                   
 //
 //  This file is part of libpm library                                                           
 //
-//  Copyright (C) 1997, ..., 2017 Pierre Molinaro.
+//  Copyright (C) 1997, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,20 +16,20 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include <stddef.h>
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //                  P L A T F O R M   D E T E C T I O N                                          
 //
@@ -38,12 +38,15 @@
 //   OS X Darwin (command line tools)                                                            
 // * __APPLE__and __NEXT_RUNTIME__ are both defined when compiling for                           
 //   OS X Cocoa (GUI applications)                                                               
-// * __MINGW32__ is defined when compiling by MinGW (for Windows)                                
-// * __linux is defined when compiling by GCC (for Linux)                                        
+// * __MINGW32__ is defined when compiling by MinGW (for Windows)
+// * __CYGWIN__ is defined when compiling by Cygwin (for Unix on Windows, https://gist.github.com/basman/587688)
+// * __linux is defined when compiling by GCC (for Linux)
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#ifdef __MINGW32__
+#if defined (__CYGWIN__)
+  #define COMPILE_FOR_WINDOWS (0)
+#elif defined (__MINGW32__)
   #define COMPILE_FOR_WINDOWS (1)
 #elif defined (WIN32)
   #define COMPILE_FOR_WINDOWS (1)
@@ -51,34 +54,20 @@
   #define COMPILE_FOR_WINDOWS (0)
 #elif defined (__linux)
   #define COMPILE_FOR_WINDOWS (0)
+#elif defined (__unix__)
+  #define COMPILE_FOR_WINDOWS (0)
 #else
   #error Undefined platform
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
-//
-//             M I N ,    M A X    F U N C T I O N S                                             
-//
-//----------------------------------------------------------------------------------------------------------------------
-
-static inline uint32_t uimin32 (const uint32_t inA, const uint32_t inB) {
-  return (inA < inB) ? inA : inB ;
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-
-static inline uint32_t uimax32 (const uint32_t inA, const uint32_t inB) {
-  return (inA > inB) ? inA : inB ;
-}
-
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //                      U T F 3 2    T Y P E                                                     
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifndef DO_NOT_GENERATE_CHECKINGS
-  class utf32 {
+  class utf32 final {
     private: uint32_t mCode ;
     public: inline uint32_t value (void) const { return mCode ; }
     public: inline utf32 (void) :
@@ -106,4 +95,4 @@ static inline uint32_t uimax32 (const uint32_t inA, const uint32_t inB) {
   #define TO_UNICODE(C) (C)
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

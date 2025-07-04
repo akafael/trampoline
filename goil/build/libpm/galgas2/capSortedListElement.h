@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  GALGAS_enumerable : Base class for GALGAS enumerable object                                  
 //
 //  This file is part of libpm library                                                           
 //
-//  Copyright (C) 2010, ..., 2010 Pierre Molinaro.
+//  Copyright (C) 2010, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,23 +16,23 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "utilities/C_SharedObject.h"
-#include "galgas2/typeComparisonResult.h"
+#include "SharedObject.h"
+#include "typeComparisonResult.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class C_String ;
+class String ;
 class cSortedListElement ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class capSortedListElement {
+class capSortedListElement final {
 //--- Private pointer
   private: cSortedListElement * mPtr ;
 
@@ -40,7 +40,7 @@ class capSortedListElement {
   public: capSortedListElement (void) ;
 
 //--- Destructor
-  public: virtual ~ capSortedListElement (void) ;
+  public: ~ capSortedListElement (void) ;
 
 //--- Handle copy
   public: capSortedListElement (const capSortedListElement & inSource) ;
@@ -69,10 +69,10 @@ class capSortedListElement {
   public: capSortedListElement copy (void) ;
 
 //--- Description
- public: void description (C_String & ioString, const int32_t inIndentation) const ;
+ public: void description (String & ioString, const int32_t inIndentation) const ;
 
 //--- Virtual method that comparing element for sorting
   public: typeComparisonResult compareForSorting (const capSortedListElement & inOperand) ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

@@ -59,8 +59,6 @@ CPU archPosixDefault
       CFLAGS = "-Wmissing-field-initializers";
       CFLAGS = "-Wno-unused-but-set-variable";
       LDFLAGS = "-L../../lib -lembUnit";
-      LDFLAGS = "-lrt";
-      LDFLAGS = "-lpthread";
       SYSTEM = PYTHON;
       LIBRARY = archConfig;
     };

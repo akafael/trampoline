@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  capCollectionElementArray                                                                    
 //
 //  This file is part of libpm library                                                           
 //
-//  Copyright (C) 2010, ..., 2016 Pierre Molinaro.
+//  Copyright (C) 2010, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,21 +16,21 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/capCollectionElement.h"
+#include "capCollectionElement.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class C_Compiler ;
+class Compiler ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class capCollectionElementArray {
+class capCollectionElementArray final {
 //--- Default constructor
   public: capCollectionElementArray (void) ;
 
@@ -38,7 +38,7 @@ class capCollectionElementArray {
   public: capCollectionElementArray (const uint32_t inCapacity) ;
 
 //--- Virtual destructor
-  public: virtual ~ capCollectionElementArray (void) ;
+  public: ~ capCollectionElementArray (void) ;
 
 //--- Handle copy
   public: capCollectionElementArray (const capCollectionElementArray & inSource) ;
@@ -52,28 +52,28 @@ class capCollectionElementArray {
 
   public: void insertObjectAtIndex (const capCollectionElement & inObject,
                                      const uint32_t inInsertionIndex,
-                                     C_Compiler * inCompiler
+                                     Compiler * inCompiler
                                      COMMA_LOCATION_ARGS) ;
 
   public: void removeObjectAtIndex (capCollectionElement & outObject,
                                      const uint32_t inInsertionIndex,
-                                     C_Compiler * inCompiler
+                                     Compiler * inCompiler
                                      COMMA_LOCATION_ARGS) ;
 
   public: void removeFirstObject (capCollectionElement & outObject,
-                                   C_Compiler * inCompiler
+                                   Compiler * inCompiler
                                    COMMA_LOCATION_ARGS) ;
 
   public: void readFirstObject (capCollectionElement & outObject,
-                                 C_Compiler * inCompiler
+                                 Compiler * inCompiler
                                  COMMA_LOCATION_ARGS) const ;
 
   public: void removeLastObject (capCollectionElement & outObject,
-                                  C_Compiler * inCompiler
+                                  Compiler * inCompiler
                                   COMMA_LOCATION_ARGS) ;
 
   public: void readLastObject (capCollectionElement & outObject,
-                                C_Compiler * inCompiler
+                                Compiler * inCompiler
                                 COMMA_LOCATION_ARGS) const ;
 
   public: void replaceObjectAtIndex (const capCollectionElement & inObject,
@@ -112,27 +112,27 @@ class capCollectionElementArray {
   public: void subListToIndex (capCollectionElementArray & outSubList,
                                 const uint32_t inIndex,
                                 bool & outOk,
-                                C_Compiler * inCompiler
+                                Compiler * inCompiler
                                 COMMA_LOCATION_ARGS) const ;
 
   public: void subListWithRange (capCollectionElementArray & ioSubList,
                                   const uint32_t inStartIndex,
                                   const uint32_t inLength,
                                   bool & outOk,
-                                  C_Compiler * inCompiler
+                                  Compiler * inCompiler
                                   COMMA_LOCATION_ARGS) const ;
 
   public: void subListFromIndex (capCollectionElementArray & ioSubList,
                                   const uint32_t inIndex,
                                   bool & outOk,
-                                  C_Compiler * inCompiler
+                                  Compiler * inCompiler
                                   COMMA_LOCATION_ARGS) const ;
 
 //--- Compare
   public: typeComparisonResult compareCollectionElementArray (const capCollectionElementArray & inOperand) const ;
 
 //--- Description
-  public: void description (C_String & ioString,
+  public: void description (String & ioString,
                              const int32_t inIndentation) const ;
 
 //--- Internal
@@ -142,4 +142,4 @@ class capCollectionElementArray {
   private: class capCollectionRoot * mSharedRoot ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  Routine 'main' (call user supplied 'mainForLIBPM' routine).                                  
 //
@@ -16,39 +16,40 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "bdd/C_BDD.h"
-#include "command_line_interface/F_mainForLIBPM.h"
-#include "utilities/MF_MemoryControl.h"
-#include "utilities/F_DisplayException.h"
-#include "streams/C_ConsoleOut.h"
-#include "time/C_DateTime.h"
-#include "utilities/C_SharedObject.h"
-#include "utilities/cpp-allocation.h"
-#include "utilities/basic-allocation.h"
-#include "utilities/C_PrologueEpilogue.h"
-#include "command_line_interface/F_Analyze_CLI_Options.h"
-#include "strings/unicode_character_base.h"
+#include "C_BDD.h"
+#include "F_mainForLIBPM.h"
+#include "MF_MemoryControl.h"
+#include "F_DisplayException.h"
+#include "C_ConsoleOut.h"
+#include "DateTime.h"
+#include "SharedObject.h"
+#include "cpp-allocation.h"
+#include "basic-allocation.h"
+#include "PrologueEpilogue.h"
+#include "F_Analyze_CLI_Options.h"
+#include "unicode_character_base.h"
+#include "acStrongPtr_class.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include <stdio.h>
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 static uint32_t gArgc = 0 ;
 static const char ** gArgv ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 uint32_t commandLineArgumentCount (void) {
   return gArgc ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-C_String commandLineArgumentAtIndex (const uint32_t inIndex) {
+String commandLineArgumentAtIndex (const uint32_t inIndex) {
   const char * result = "" ;
   if (inIndex < gArgc) {
     result = gArgv [inIndex] ;
@@ -56,31 +57,23 @@ C_String commandLineArgumentAtIndex (const uint32_t inIndex) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 int main (int argc, const char * argv []) {
-//  displayUnicodeCharacterRange () ;
   gArgc = (uint32_t) argc ;
   gArgv = argv ;
-  // PMUInt128::example () ;
-  // C_DirectedGraph::example () ;
-  C_DateTime::enterCurrentToolModificationTime (argv [0]) ;
+  DateTime::enterCurrentToolModificationTime (argv [0]) ;
   int returnCode = 0 ; // No error
-//--- Print options`
-  // printf ("Version C++ %ld\n", __cplusplus) ;
-  /* printf ("Command line options:\n") ;
-  for (int i=1 ; i<argc ; i++) {
-    printf ("  - '%s'\n", argv [i]) ;
-  } */
 //---
   if (returnCode == 0) {
     try{
-      C_PrologueEpilogue::runPrologueActions () ;
+      PrologueEpilogue::runPrologueActions () ;
       returnCode = mainForLIBPM (argc, argv) ;
-      C_PrologueEpilogue::runEpilogueActions () ;
+      PrologueEpilogue::runEpilogueActions () ;
       C_BDD::freeBDDStataStructures () ;
       #ifndef DO_NOT_GENERATE_CHECKINGS
-        C_SharedObject::checkAllObjectsHaveBeenReleased () ;
+        acStrongPtr_class::printExistingClassInstances () ;
+        SharedObject::checkAllObjectsHaveBeenReleased () ;
         displayAllocationStats () ;
         displayAllocatedBlockSizeStats () ;
         displayAllocatedBlocksInfo () ;
@@ -88,19 +81,22 @@ int main (int argc, const char * argv []) {
     }catch (const std::exception & e) {
       F_default_display_exception (e) ;
       #ifndef DO_NOT_GENERATE_CHECKINGS
-        C_SharedObject::checkAllObjectsHaveBeenReleased () ;
+        acStrongPtr_class::printExistingClassInstances () ;
+        SharedObject::checkAllObjectsHaveBeenReleased () ;
       #endif
       returnCode = 1 ; // Error code
     }catch (char * inExceptionString) {
       printf ("*** Exception: '%s' ***\n", inExceptionString) ;
       #ifndef DO_NOT_GENERATE_CHECKINGS
-        C_SharedObject::checkAllObjectsHaveBeenReleased () ;
+        acStrongPtr_class::printExistingClassInstances () ;
+        SharedObject::checkAllObjectsHaveBeenReleased () ;
       #endif
       returnCode = 1 ; // Error code
     }catch (...) {
       F_default_display_unknown_exception () ;
       #ifndef DO_NOT_GENERATE_CHECKINGS
-        C_SharedObject::checkAllObjectsHaveBeenReleased () ;
+        acStrongPtr_class::printExistingClassInstances () ;
+        SharedObject::checkAllObjectsHaveBeenReleased () ;
       #endif
       returnCode = 2 ; // Error code
     }
@@ -108,4 +104,4 @@ int main (int argc, const char * argv []) {
   return returnCode ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

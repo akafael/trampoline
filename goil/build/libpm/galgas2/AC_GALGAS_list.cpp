@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  AC_GALGAS_list : Base class for GALGAS list                                                  
+//  AC_GALGAS_list : Base class for GALGAS list
 //
-//  This file is part of libpm library                                                           
+//  This file is part of libpm library
 //
-//  Copyright (C) 2008, ..., 2016 Pierre Molinaro.
+//  Copyright (C) 2008, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,58 +16,58 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include "all-predefined-types.h"
-#include "utilities/MF_MemoryControl.h"
-#include "galgas2/C_Compiler.h"
+#include "MF_MemoryControl.h"
+#include "Compiler.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark removeObjectAtIndex
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::removeObjectAtIndex (capCollectionElement & outAttributes,
-                                              const uint32_t inRemoveIndex,
-                                              C_Compiler * inCompiler
-                                              COMMA_LOCATION_ARGS) {
+                                          const uint32_t inRemoveIndex,
+                                          Compiler * inCompiler
+                                          COMMA_LOCATION_ARGS) {
   mSharedArray.removeObjectAtIndex (outAttributes, inRemoveIndex, inCompiler COMMA_THERE) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark removeFirstObject
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::removeFirstObject (capCollectionElement & outAttributes,
-                                            C_Compiler * inCompiler
-                                            COMMA_LOCATION_ARGS) {
+                                        Compiler * inCompiler
+                                        COMMA_LOCATION_ARGS) {
   mSharedArray.removeFirstObject (outAttributes, inCompiler COMMA_THERE) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark removeLastObject
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::removeLastObject (capCollectionElement & outAttributes,
-                                           C_Compiler * inCompiler
-                                           COMMA_LOCATION_ARGS) {
+                                       Compiler * inCompiler
+                                       COMMA_LOCATION_ARGS) {
   mSharedArray.removeLastObject (outAttributes, inCompiler COMMA_THERE) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-//    AC_GALGAS_list                                                                             
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//    AC_GALGAS_list
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_list::AC_GALGAS_list (void) :
 AC_GALGAS_root (),
@@ -75,7 +75,7 @@ mSharedArray (),
 mIsValid (false) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_list::AC_GALGAS_list (const capCollectionElementArray & inSharedArray) :
 AC_GALGAS_root (),
@@ -83,27 +83,31 @@ mSharedArray (inSharedArray),
 mIsValid (true) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_list::~ AC_GALGAS_list (void) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-void AC_GALGAS_list::description (C_String & ioString,
-                                      const int32_t inIndentation) const {
-  ioString << "<list @" << staticTypeDescriptor ()->mGalgasTypeName
-           << " (" << cStringWithUnsigned (count()) << " object"
-           << ((count() > 1) ? "s" : "") << "):" ;
+void AC_GALGAS_list::description (String & ioString,
+                                  const int32_t inIndentation) const {
+  ioString.appendCString ("<list @") ;
+  ioString.appendString (staticTypeDescriptor ()->mGalgasTypeName) ;
+  ioString.appendCString (" (") ;
+  ioString.appendUnsigned (count()) ;
+  ioString.appendCString (" object") ;
+  ioString.appendString ((count() > 1) ? "s" : "") ;
+  ioString.appendCString ("):") ;
   if (isValid ()) {
     mSharedArray.description (ioString, inIndentation) ;
   }else{
-    ioString << " not built" ;
+    ioString.appendCString (" not built") ;
   }
-  ioString << ">" ;
+  ioString.appendCString (">") ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::populateEnumerationArray (capCollectionElementArray & outEnumerationArray) const {
   if (isValid ()) {
@@ -111,7 +115,7 @@ void AC_GALGAS_list::populateEnumerationArray (capCollectionElementArray & outEn
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 uint32_t AC_GALGAS_list::count () const {
   uint32_t result = 0 ;
@@ -121,9 +125,9 @@ uint32_t AC_GALGAS_list::count () const {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-GALGAS_uint AC_GALGAS_list::getter_length (UNUSED_LOCATION_ARGS) const {
+GALGAS_uint AC_GALGAS_list::getter_count (UNUSED_LOCATION_ARGS) const {
   GALGAS_uint result ;
   if (isValid ()) {
     result = GALGAS_uint (mSharedArray.count ()) ;
@@ -131,7 +135,7 @@ GALGAS_uint AC_GALGAS_list::getter_length (UNUSED_LOCATION_ARGS) const {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_range AC_GALGAS_list::getter_range (UNUSED_LOCATION_ARGS) const {
   GALGAS_range result ;
@@ -141,49 +145,49 @@ GALGAS_range AC_GALGAS_list::getter_range (UNUSED_LOCATION_ARGS) const {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::drop (void) {
   mIsValid = false ;
   mSharedArray.removeAllObjects () ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::appendObject (const capCollectionElement & inElementToAdd) {
   mSharedArray.appendObject (inElementToAdd) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::insertObjectAtIndex (const capCollectionElement & inElementToAdd,
                                           const uint32_t inInsertionIndex,
-                                          C_Compiler * inCompiler
+                                          Compiler * inCompiler
                                           COMMA_LOCATION_ARGS) {
   mSharedArray.insertObjectAtIndex (inElementToAdd, inInsertionIndex, inCompiler COMMA_THERE) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::readFirst (capCollectionElement & outAttributes,
-                                C_Compiler * inCompiler
+                                Compiler * inCompiler
                                 COMMA_LOCATION_ARGS) const {
   mSharedArray.readFirstObject (outAttributes, inCompiler COMMA_THERE) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::readLast (capCollectionElement & outAttributes,
-                               C_Compiler * inCompiler
+                               Compiler * inCompiler
                                COMMA_LOCATION_ARGS) const {
   mSharedArray.readLastObject (outAttributes, inCompiler COMMA_THERE) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::subListWithRange (AC_GALGAS_list & outList,
                                        const GALGAS_range & inRange,
-                                       C_Compiler * inCompiler
+                                       Compiler * inCompiler
                                        COMMA_LOCATION_ARGS) const {
   if (isValid () && inRange.isValid ()) {
     bool ok = false ;
@@ -198,11 +202,11 @@ void AC_GALGAS_list::subListWithRange (AC_GALGAS_list & outList,
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::subListFromIndex (AC_GALGAS_list & outList,
                                        const GALGAS_uint & inIndex,
-                                       C_Compiler * inCompiler
+                                       Compiler * inCompiler
                                        COMMA_LOCATION_ARGS) const {
   if (isValid () && inIndex.isValid ()) {
     bool ok = false ;
@@ -213,11 +217,11 @@ void AC_GALGAS_list::subListFromIndex (AC_GALGAS_list & outList,
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::subListToIndex (AC_GALGAS_list & outList,
                                      const GALGAS_uint & inIndex,
-                                     C_Compiler * inCompiler
+                                     Compiler * inCompiler
                                      COMMA_LOCATION_ARGS) const {
   if (isValid () && inIndex.isValid ()) {
     bool ok = false ;
@@ -228,7 +232,7 @@ void AC_GALGAS_list::subListToIndex (AC_GALGAS_list & outList,
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_list::appendList (const AC_GALGAS_list & inList) {
   if (isValid () && inList.isValid ()) {
@@ -236,10 +240,10 @@ void AC_GALGAS_list::appendList (const AC_GALGAS_list & inList) {
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 capCollectionElement AC_GALGAS_list::readObjectAtIndex (const GALGAS_uint & inIndex,
-                                                        C_Compiler * inCompiler
+                                                        Compiler * inCompiler
                                                         COMMA_LOCATION_ARGS) const {
   capCollectionElement result ;
   if (isValid () && inIndex.isValid ()) {
@@ -247,20 +251,23 @@ capCollectionElement AC_GALGAS_list::readObjectAtIndex (const GALGAS_uint & inIn
     if (index < mSharedArray.count ()) {
       result = mSharedArray.objectAtIndex (index COMMA_THERE) ;
     }else{
-      C_String s = "objectAtIndex: index (" ;
-      s << cStringWithUnsigned (index) << ") >= length (" << cStringWithUnsigned (count ()) << ")" ;
+      String s = "objectAtIndex: index (" ;
+      s.appendUnsigned (index) ;
+      s.appendCString (") >= length (") ;
+      s.appendUnsigned (count ()) ;
+      s.appendCString (")") ;
       inCompiler->onTheFlyRunTimeError (s COMMA_THERE) ;
     }
   }
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cCollectionElement * AC_GALGAS_list::uniquelyReferencedPointerAtIndex (const GALGAS_uint & inIndex,
-                                                                       C_Compiler * inCompiler
+                                                                       Compiler * inCompiler
                                                                        COMMA_LOCATION_ARGS) {
-  cCollectionElement * result = NULL ;
+  cCollectionElement * result = nullptr ;
   if (isValid ()) {
     if (inIndex.isValid ()) {
       const uint32_t index = inIndex.uintValue () ;
@@ -268,8 +275,11 @@ cCollectionElement * AC_GALGAS_list::uniquelyReferencedPointerAtIndex (const GAL
         result = mSharedArray.uniquelyReferencedPointerAtIndex (index COMMA_THERE) ;
         macroUniqueSharedObject (result) ;
       }else{
-        C_String s = "objectAtIndex: index (" ;
-        s << cStringWithUnsigned (index) << ") >= length (" << cStringWithUnsigned (count ()) << ")" ;
+        String s = "objectAtIndex: index (" ;
+        s.appendUnsigned (index) ;
+        s.appendCString (") >= length (") ;
+        s.appendUnsigned (count ()) ;
+        s.appendCString (")") ;
         inCompiler->onTheFlyRunTimeError (s COMMA_THERE) ;
       }
     }else{
@@ -279,13 +289,13 @@ cCollectionElement * AC_GALGAS_list::uniquelyReferencedPointerAtIndex (const GAL
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark Object Compare
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typeComparisonResult AC_GALGAS_list::objectCompare (const AC_GALGAS_list & inOperand) const {
   typeComparisonResult result = kOperandNotValid ;
@@ -295,21 +305,21 @@ typeComparisonResult AC_GALGAS_list::objectCompare (const AC_GALGAS_list & inOpe
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  c L i s t M a p N o d e                                                                      
+//  c L i s t M a p N o d e
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class cListMapNode {
   public: cListMapNode * mInfPtr ;
   public: cListMapNode * mSupPtr ;
   public: int32_t mBalance ;
-  public: C_String mKey ;
+  public: String mKey ;
   public: capCollectionElementArray myList ;
 
 //--- Constructors
-  public: cListMapNode (const C_String & inKey) ;
+  public: cListMapNode (const String & inKey) ;
   public: cListMapNode (const cListMapNode * inNode) ;
 
 //--- Destructor
@@ -320,30 +330,30 @@ class cListMapNode {
   private: cListMapNode & operator = (const cListMapNode &) ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-cListMapNode::cListMapNode (const C_String & inKey) :
-mInfPtr (NULL),
-mSupPtr (NULL),
+cListMapNode::cListMapNode (const String & inKey) :
+mInfPtr (nullptr),
+mSupPtr (nullptr),
 mBalance (0),
 mKey (inKey),
 myList () {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cListMapNode::~ cListMapNode (void) {
   macroMyDelete (mInfPtr) ;
   macroMyDelete (mSupPtr) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  cSharedListMapRoot                                                                           
+//  cSharedListMapRoot
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class cSharedListMapRoot : public C_SharedObject {
+class cSharedListMapRoot : public SharedObject {
 //--- Attributes
   private: cListMapNode * mRoot ;
   public: const cListMapNode * root (void) const { return mRoot ; }
@@ -366,24 +376,23 @@ class cSharedListMapRoot : public C_SharedObject {
   public: VIRTUAL_IN_DEBUG uint32_t count (void) const { return mCount ; }
 
 //--- Description
-  public: VIRTUAL_IN_DEBUG void description (C_String & ioString,
-                                              const int32_t inIndentation) const ;
+  public: VIRTUAL_IN_DEBUG void description (String & ioString, const int32_t inIndentation) const  ;
 
   public: static void internalDescription (cListMapNode * inNode,
-                                            C_String & ioString,
+                                            String & ioString,
                                             const int32_t inIndentation,
                                             uint32_t & ioIdx) ;
 //--- Find or add entry
   public: VIRTUAL_IN_DEBUG void findOrAddEntry (cListMapNode * & ioRootPtr,
-                                                 const C_String & inKey,
+                                                 const String & inKey,
                                                  cListMapNode * & outEntry,
                                                  bool & ioExtension) ;
 
-  public: VIRTUAL_IN_DEBUG void addObjectInListMap (const C_String & inKey,
+  public: VIRTUAL_IN_DEBUG void addObjectInListMap (const String & inKey,
                                                      capCollectionElement & inAttributeArray) ;
 
 //--------------------------------- Support for 'listForKey' reader
-  public: VIRTUAL_IN_DEBUG capCollectionElementArray listForKey (const C_String & inKey) const ;
+  public: VIRTUAL_IN_DEBUG capCollectionElementArray listForKey (const String & inKey) const ;
 
 //--------------------------------- Support for enumeration
   public: VIRTUAL_IN_DEBUG void populateEnumerationArray (capCollectionElementArray & ioEnumerationArray) const ;
@@ -391,131 +400,131 @@ class cSharedListMapRoot : public C_SharedObject {
   public: typeComparisonResult listmapCompare (const cSharedListMapRoot * inOperand) const ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cSharedListMapRoot::cSharedListMapRoot (LOCATION_ARGS) :
-C_SharedObject (THERE),
-mRoot (NULL),
+SharedObject (THERE),
+mRoot (nullptr),
 mCount (0) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cSharedListMapRoot::~cSharedListMapRoot (void) {
   macroMyDelete (mRoot) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark AC_GALGAS_listmap
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_listmap::AC_GALGAS_listmap (void) :
 AC_GALGAS_root (),
-mSharedListMap (NULL) {
+mSharedListMap (nullptr) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_listmap::~ AC_GALGAS_listmap (void) {
   macroDetachSharedObject (mSharedListMap) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_listmap::drop (void) {
   macroDetachSharedObject (mSharedListMap) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_listmap::AC_GALGAS_listmap (const AC_GALGAS_listmap & inSource) :
 AC_GALGAS_root (),
-mSharedListMap (NULL) {
+mSharedListMap (nullptr) {
   macroAssignSharedObject (mSharedListMap, inSource.mSharedListMap) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_listmap & AC_GALGAS_listmap::operator = (const AC_GALGAS_listmap & inSource) {
   macroAssignSharedObject (mSharedListMap, inSource.mSharedListMap) ;
   return * this ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 uint32_t AC_GALGAS_listmap::count (void) const {
   uint32_t result = 0 ;
-  if (NULL != mSharedListMap) {
+  if (nullptr != mSharedListMap) {
     result = mSharedListMap->count () ;
   }
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_uint AC_GALGAS_listmap::getter_count (UNUSED_LOCATION_ARGS) const {
   return GALGAS_uint (count ()) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark reader allKeys
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 static void enterAllKeys (const cListMapNode * inNode, GALGAS_stringset & ioResult) {
-  if (inNode != NULL) {
+  if (inNode != nullptr) {
     enterAllKeys (inNode->mInfPtr, ioResult) ;
     ioResult.addAssign_operation (GALGAS_string (inNode->mKey) COMMA_HERE) ;
     enterAllKeys (inNode->mSupPtr, ioResult) ;
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_stringset AC_GALGAS_listmap::getter_allKeys (LOCATION_ARGS) const {
   GALGAS_stringset result ;
   if (isValid ()) {
-    result = GALGAS_stringset::constructor_emptySet (THERE) ;
+    result = GALGAS_stringset::class_func_emptySet (THERE) ;
     enterAllKeys (mSharedListMap->root (), result) ;
   }
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 static void enterKeyList (const cListMapNode * inNode, GALGAS_stringlist & ioResult) {
-  if (inNode != NULL) {
+  if (inNode != nullptr) {
     enterKeyList (inNode->mInfPtr, ioResult) ;
     ioResult.addAssign_operation (GALGAS_string (inNode->mKey) COMMA_HERE) ;
     enterKeyList (inNode->mSupPtr, ioResult) ;
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_stringlist AC_GALGAS_listmap::getter_keyList (LOCATION_ARGS) const {
   GALGAS_stringlist result ;
   if (isValid ()) {
-    result = GALGAS_stringlist::constructor_emptyList (THERE) ;
+    result = GALGAS_stringlist::class_func_emptyList (THERE) ;
     enterKeyList (mSharedListMap->root (), result) ;
   }
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark Object Compare
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typeComparisonResult cSharedListMapRoot::listmapCompare (const cSharedListMapRoot * inOperand) const {
   typeComparisonResult result = kOperandEqual ;
@@ -533,7 +542,7 @@ typeComparisonResult cSharedListMapRoot::listmapCompare (const cSharedListMapRoo
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typeComparisonResult AC_GALGAS_listmap::objectCompare (const AC_GALGAS_listmap & inOperand) const {
   typeComparisonResult result = kOperandNotValid ;
@@ -543,77 +552,84 @@ typeComparisonResult AC_GALGAS_listmap::objectCompare (const AC_GALGAS_listmap &
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark Description
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void cSharedListMapRoot::internalDescription (cListMapNode * inNode,
-                                              C_String & ioString,
+                                              String & ioString,
                                               const int32_t inIndentation,
                                               uint32_t & ioIdx) {
-  if (NULL != inNode) {
+  if (nullptr != inNode) {
     internalDescription (inNode->mInfPtr, ioString, inIndentation, ioIdx) ;
-    ioString << "\n" ;
-    ioString.writeStringMultiple ("| ", inIndentation) ;
-    ioString << "|-at " << cStringWithUnsigned (ioIdx)
-             << ": key '" << inNode->mKey << "' " ;
+    ioString.appendCString ("\n") ;
+    ioString.appendStringMultiple ("| ", inIndentation) ;
+    ioString.appendCString ("|-at ") ;
+    ioString.appendUnsigned (ioIdx) ;
+    ioString.appendCString (": key '") ;
+    ioString.appendString (inNode->mKey) ;
+    ioString.appendCString ("' ") ;
     inNode->myList.description (ioString, inIndentation + 1) ;
     ioIdx ++ ;
     internalDescription (inNode->mSupPtr, ioString, inIndentation, ioIdx) ;
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-void cSharedListMapRoot::description (C_String & ioString,
+void cSharedListMapRoot::description (String & ioString,
                                       const int32_t inIndentation) const {
-  ioString << " ("
-           << cStringWithUnsigned (count ())
-           << " object" << ((count () > 1) ? "s" : "")
-           << "): " ;
+  ioString.appendCString (" (") ;
+  ioString.appendUnsigned (count ()) ;
+  ioString.appendCString (" object") ;
+  ioString.appendString ((count () > 1) ? "s" : "") ;
+  ioString.appendCString ("): ") ;
   uint32_t idx = 0 ;
   internalDescription (mRoot, ioString, inIndentation, idx) ;
-  ioString << ">" ;
+  ioString.appendCString (">") ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-void AC_GALGAS_listmap::description (C_String & ioString,
+void AC_GALGAS_listmap::description (String & ioString,
                                      const int32_t inIndentation) const {
-  ioString << "<@" << staticTypeDescriptor ()->mGalgasTypeName ;
+  ioString.appendCString ("<@") ;
+  ioString.appendString (staticTypeDescriptor ()->mGalgasTypeName) ;
   if (isValid ()) {
-    ioString << ": " << cStringWithUnsigned (count()) << " object"
-             << ((count() > 1) ? "s" : "") ;
+    ioString.appendCString (": ") ;
+    ioString.appendUnsigned (count()) ;
+    ioString.appendCString (" object") ;
+    ioString.appendString ((count() > 1) ? "s" : "") ;
     mSharedListMap->description (ioString, inIndentation) ;
   }else{
-    ioString << ": not built" ;
+    ioString.appendCString (": not built") ;
   }
-  ioString << ">" ;
+  ioString.appendCString (">") ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark List map Node
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cListMapNode::cListMapNode (const cListMapNode * inNode) :
-mInfPtr (NULL),
-mSupPtr (NULL),
+mInfPtr (nullptr),
+mSupPtr (nullptr),
 mBalance (0),
 mKey (),
 myList () {
   macroValidPointer (inNode) ;
-  if (inNode->mInfPtr != NULL) {
+  if (inNode->mInfPtr != nullptr) {
     macroMyNew (mInfPtr, cListMapNode (inNode->mInfPtr)) ;
   }
-  if (inNode->mSupPtr != NULL) {
+  if (inNode->mSupPtr != nullptr) {
     macroMyNew (mSupPtr, cListMapNode (inNode->mSupPtr)) ;
   }
   mKey = inNode->mKey ;
@@ -621,27 +637,21 @@ myList () {
   myList = inNode->myList ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void cSharedListMapRoot::copyFrom (const cSharedListMapRoot * inSource) {
-  #ifndef DO_NOT_GENERATE_CHECKINGS
-    // inSource->checkMap (HERE) ;
-  #endif
   macroValidSharedObject (inSource, cSharedListMapRoot) ;
   mCount = inSource->mCount ;
-  if (NULL != inSource->mRoot) {
+  if (nullptr != inSource->mRoot) {
     macroMyNew (mRoot, cListMapNode (inSource->mRoot)) ;
   }
-  #ifndef DO_NOT_GENERATE_CHECKINGS
-    // checkMap (HERE) ;
-  #endif
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_listmap::insulateListMap (LOCATION_ARGS) {
-  if ((mSharedListMap != NULL) && !mSharedListMap->isUniquelyReferenced ()) {
-    cSharedListMapRoot * p = NULL ;
+  if ((mSharedListMap != nullptr) && !mSharedListMap->isUniquelyReferenced ()) {
+    cSharedListMapRoot * p = nullptr ;
     macroMyNew (p, cSharedListMapRoot (THERE)) ;
     p->copyFrom (mSharedListMap) ;
     macroAssignSharedObject (mSharedListMap, p) ;
@@ -649,25 +659,25 @@ void AC_GALGAS_listmap::insulateListMap (LOCATION_ARGS) {
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark Create a new list map
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_listmap::makeNewEmptyListMap (LOCATION_ARGS) {
   macroMyNew (mSharedListMap, cSharedListMapRoot (THERE)) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark Adding an object
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 static void rotateLeft (cListMapNode * & ioRootPtr) {
   cListMapNode * b = ioRootPtr->mSupPtr ;
@@ -708,13 +718,13 @@ static void rotateRight (cListMapNode * & ioRootPtr) {
   ioRootPtr = b ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void cSharedListMapRoot::findOrAddEntry (cListMapNode * & ioRootPtr,
-                                         const C_String & inKey,
+                                         const String & inKey,
                                          cListMapNode * & outEntry,
                                          bool & ioExtension) {
-  if (ioRootPtr == NULL) {
+  if (ioRootPtr == nullptr) {
     macroMyNew (ioRootPtr, cListMapNode (inKey)) ;
     outEntry = ioRootPtr ;
     mCount ++ ;
@@ -757,43 +767,43 @@ void cSharedListMapRoot::findOrAddEntry (cListMapNode * & ioRootPtr,
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-void cSharedListMapRoot::addObjectInListMap (const C_String & inKey,
+void cSharedListMapRoot::addObjectInListMap (const String & inKey,
                                                  capCollectionElement & inAttributeArray) {
   macroUniqueSharedObject (this) ;
-  cListMapNode * entry = NULL ;
+  cListMapNode * entry = nullptr ;
   bool extension = false ; // Unused
   findOrAddEntry (mRoot, inKey, entry, extension) ;
   macroValidPointer (entry) ;
   entry->myList.appendObject (inAttributeArray) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_listmap::addObjectInListMap (const GALGAS_string & inKey,
                                             capCollectionElement & inAttributeArray) {
   if (isValid () && inKey.isValid ()) {
     insulateListMap (HERE) ;
-    if (NULL != mSharedListMap) {
+    if (nullptr != mSharedListMap) {
       mSharedListMap->addObjectInListMap (inKey.stringValue (), inAttributeArray) ;
     }
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark listForKey support
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-capCollectionElementArray cSharedListMapRoot::listForKey (const C_String & inKey) const {
+capCollectionElementArray cSharedListMapRoot::listForKey (const String & inKey) const {
   capCollectionElementArray result ;
   bool found = false ;
   const cListMapNode * p = mRoot ;
-  while ((p != NULL) && !found) {
+  while ((p != nullptr) && !found) {
     const int32_t comparaison = p->mKey.compare (inKey) ;
     if (comparaison > 0) {
       p = p->mInfPtr ;
@@ -807,7 +817,7 @@ capCollectionElementArray cSharedListMapRoot::listForKey (const C_String & inKey
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 capCollectionElementArray AC_GALGAS_listmap::listForKey (const GALGAS_string & inKey) const {
   capCollectionElementArray result ;
@@ -817,15 +827,15 @@ capCollectionElementArray AC_GALGAS_listmap::listForKey (const GALGAS_string & i
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark cListMapElement
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-cListMapElement::cListMapElement (const C_String & inKey,
+cListMapElement::cListMapElement (const String & inKey,
                                           const capCollectionElementArray & inSharedList
                                           COMMA_LOCATION_ARGS) :
 cCollectionElement (THERE),
@@ -833,53 +843,53 @@ mKey (inKey),
 mSharedListMapList (inSharedList) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cListMapElement::~ cListMapElement (void) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool cListMapElement::isValid (void) const {
   return true ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typeComparisonResult cListMapElement::compare (const cCollectionElement * /* inOperand */) const {
   return kOperandNotValid ;
 }
 
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cCollectionElement * cListMapElement::copy (void) {
-  return NULL ;
+  return nullptr ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-void cListMapElement::description (C_String & /* ioString */,
+void cListMapElement::description (String & /* ioString */,
                                    const int32_t /* inIndentation */) const {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifdef PRAGMA_MARK_ALLOWED
   #pragma mark listmap cEnumerator
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//                 'GALGAS_stringset::cEnumerator' class                                         
+//                 'GALGAS_stringset::cEnumerator' class
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 static void enterAscendingEnumeration (const cListMapNode * inNode,
                                        capCollectionElementArray & ioEnumerationArray) {
-  if (inNode != NULL) {
+  if (inNode != nullptr) {
     enterAscendingEnumeration (inNode->mInfPtr, ioEnumerationArray) ;
-    cListMapElement * p = NULL ;
+    cListMapElement * p = nullptr ;
     macroMyNew (p, cListMapElement (inNode->mKey, inNode->myList COMMA_HERE)) ;
     capCollectionElement element ;
     element.setPointer (p) ;
@@ -889,16 +899,15 @@ static void enterAscendingEnumeration (const cListMapNode * inNode,
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void cSharedListMapRoot::populateEnumerationArray (capCollectionElementArray & ioEnumerationArray) const {
-  // printf ("MAP COUNT %u\n", count ()) ;
   ioEnumerationArray.setCapacity (mCount) ;
   enterAscendingEnumeration (mRoot, ioEnumerationArray) ;
-  MF_Assert (mCount == ioEnumerationArray.count (), "mCount (%lld) != ioEnumerationArray.count () (%lld)", mCount, ioEnumerationArray.count ()) ;
+  macroAssert (mCount == ioEnumerationArray.count (), "mCount (%lld) != ioEnumerationArray.count () (%lld)", mCount, ioEnumerationArray.count ()) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_listmap::populateEnumerationArray (capCollectionElementArray & ioEnumerationArray) const {
   if (isValid ()) {
@@ -906,4 +915,4 @@ void AC_GALGAS_listmap::populateEnumerationArray (capCollectionElementArray & io
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  AC_GALGAS_map : Base class for GALGAS map                                                    
+//  AC_GALGAS_map : Base class for GALGAS map
 //
-//  This file is part of libpm library                                                           
+//  This file is part of libpm library
 //
 //  Copyright (C) 2008, ..., 2021 Pierre Molinaro.
 //
@@ -16,16 +16,16 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/AC_GALGAS_root.h"
-#include "galgas2/typeComparisonResult.h"
+#include "AC_GALGAS_root.h"
+#include "typeComparisonResult.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class cSharedMapRoot ;
 class cMapElement ;
@@ -37,24 +37,24 @@ class GALGAS_stringlist ;
 class GALGAS_bool ;
 class GALGAS_uint ;
 class GALGAS_location ;
-class C_LocationInSource ;
+class LocationInSource ;
 class AC_GALGAS_map ;
 class capCollectionElement ;
 class cCollectionElement ;
-class C_Compiler ;
+class Compiler ;
 class C_galgas_type_descriptor ;
 class capCollectionElementArray ;
 class cMapNode ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//     M A P                                                                                     
+//     M A P
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class AC_GALGAS_map : public AC_GALGAS_root {
 //--------------------------------- Constructor
-  protected: AC_GALGAS_map (const bool inActivateReplacementSuggestions) ;
+  protected: AC_GALGAS_map (void) ;
 
 //--------------------------------- Virtual destructor
   public: virtual ~ AC_GALGAS_map (void) ;
@@ -67,10 +67,10 @@ class AC_GALGAS_map : public AC_GALGAS_root {
   public: VIRTUAL_IN_DEBUG uint32_t count (void) const ;
 
 //--- isValid
-  public: VIRTUAL_IN_DEBUG inline bool isValid (void) const { return mSharedMap != NULL ; }
+  public: VIRTUAL_IN_DEBUG inline bool isValid (void) const override { return mSharedMap != nullptr ; }
 
 //--- drop
-  public: VIRTUAL_IN_DEBUG void drop (void) ;
+  public: VIRTUAL_IN_DEBUG void drop (void) override ;
 
 //--- Create a new map
   protected: VIRTUAL_IN_DEBUG void makeNewEmptyMap (LOCATION_ARGS) ;
@@ -83,11 +83,11 @@ class AC_GALGAS_map : public AC_GALGAS_root {
 
 //--------------------------------- Insert
   private: VIRTUAL_IN_DEBUG void insulate (LOCATION_ARGS) ;
-  
+
   private: VIRTUAL_IN_DEBUG void insulateCurrentAndOverridenMaps (LOCATION_ARGS) ;
-  
+
   protected: VIRTUAL_IN_DEBUG void performInsert (const capCollectionElement & inAttributes,
-                                                   C_Compiler * inCompiler,
+                                                   Compiler * inCompiler,
                                                    const char * inInsertErrorMessage,
                                                    const char * inShadowErrorMessage
                                                    COMMA_LOCATION_ARGS) ;
@@ -95,43 +95,43 @@ class AC_GALGAS_map : public AC_GALGAS_root {
 //--------------------------------- Search for 'with' read only instruction
   public: VIRTUAL_IN_DEBUG const cCollectionElement * readAccessForWithInstruction (const GALGAS_string & inKey) const ;
 
-  public: VIRTUAL_IN_DEBUG cCollectionElement * readWriteAccessForWithInstructionWithErrorMessage (C_Compiler * inCompiler,
+  public: VIRTUAL_IN_DEBUG cCollectionElement * readWriteAccessForWithInstructionWithErrorMessage (Compiler * inCompiler,
                                                                                                     const GALGAS_lstring & inKey,
                                                                                                     const char * inSearchErrorMessage
                                                                                                     COMMA_LOCATION_ARGS) ;
 
 //--------------------------------- Search
-  protected: VIRTUAL_IN_DEBUG cMapNode * searchEntryInMap (const C_String & inKey) const ;
+  protected: VIRTUAL_IN_DEBUG cMapNode * searchEntryInMap (const String & inKey) const ;
 
   protected: VIRTUAL_IN_DEBUG const cCollectionElement * performSearch (const GALGAS_lstring & inKey,
-                                                                         C_Compiler * inCompiler,
+                                                                         Compiler * inCompiler,
                                                                          const char * inSearchErrorMessage
                                                                          COMMA_LOCATION_ARGS) const ;
 
   protected: VIRTUAL_IN_DEBUG const cMapElement * searchForReadingAttribute (const GALGAS_string & inKey,
-                                                                              C_Compiler * inCompiler
+                                                                              Compiler * inCompiler
                                                                               COMMA_LOCATION_ARGS) const ;
 
   protected: VIRTUAL_IN_DEBUG const cMapElement * searchForKey (const GALGAS_string & inKey) const ;
 
   protected: VIRTUAL_IN_DEBUG cMapElement * searchForReadWriteAttribute (const GALGAS_string & inKey,
                                                                           const bool inErrorOnUnknownKey,
-                                                                          C_Compiler * inCompiler
+                                                                          Compiler * inCompiler
                                                                           COMMA_LOCATION_ARGS) ;
 
   protected: VIRTUAL_IN_DEBUG cMapElement * searchForReadWriteAttribute (const GALGAS_lstring & inKey,
-                                                                          C_Compiler * inCompiler,
+                                                                          Compiler * inCompiler,
                                                                           const char * inSearchErrorMessage
                                                                           COMMA_LOCATION_ARGS) ;
 
   protected: VIRTUAL_IN_DEBUG void getOverridenMap (AC_GALGAS_map & outMap,
-                                                     C_Compiler * inCompiler
+                                                     Compiler * inCompiler
                                                      COMMA_LOCATION_ARGS) const ;
 
 //--------------------------------- Remove
   protected: VIRTUAL_IN_DEBUG void performRemove (GALGAS_lstring & inKey,
                                                    capCollectionElement & outResult,
-                                                   C_Compiler * inCompiler,
+                                                   Compiler * inCompiler,
                                                    const char * inRemoveErrorMessage
                                                    COMMA_LOCATION_ARGS) ;
 
@@ -147,7 +147,7 @@ class AC_GALGAS_map : public AC_GALGAS_root {
                                                              COMMA_LOCATION_ARGS) const ;
 
   public: VIRTUAL_IN_DEBUG GALGAS_location getter_locationForKey (const GALGAS_string & inKey,
-                                                                  C_Compiler * inCompiler
+                                                                  Compiler * inCompiler
                                                                   COMMA_LOCATION_ARGS) const ;
 
   public: VIRTUAL_IN_DEBUG GALGAS_stringset getter_keySet (LOCATION_ARGS) const ;
@@ -157,11 +157,10 @@ class AC_GALGAS_map : public AC_GALGAS_root {
   public: VIRTUAL_IN_DEBUG GALGAS_uint getter_count (LOCATION_ARGS) const ;
 
 //--------------------------------- Introspection
-  public: virtual const C_galgas_type_descriptor * staticTypeDescriptor (void) const = 0 ;
+  public: virtual const C_galgas_type_descriptor * staticTypeDescriptor (void) const override = 0 ;
 
 //--------------------------------- Implementation of reader 'description'
-  public: VIRTUAL_IN_DEBUG void description (C_String & ioString,
-                                              const int32_t inIndentation) const ;
+  public: VIRTUAL_IN_DEBUG void description (String & ioString, const int32_t inIndentation) const override ;
 
 //--------------------------------- Comparison
   public: typeComparisonResult objectCompare (const AC_GALGAS_map & inOperand) const ;
@@ -171,7 +170,6 @@ class AC_GALGAS_map : public AC_GALGAS_root {
 
 //--------------------------------- Properties
   private: cSharedMapRoot * mSharedMap ;
-  private: bool mActivateReplacementSuggestions ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

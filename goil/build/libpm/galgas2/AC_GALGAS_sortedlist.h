@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  AC_GALGAS_sortedlist : base class for GALGAS sorted list                                     
+//  AC_GALGAS_sortedlist : base class for GALGAS sorted list
 //
-//  This file is part of libpm library                                                           
+//  This file is part of libpm library
 //
 //  Copyright (C) 2005, ..., 2010 Pierre Molinaro.
 //
@@ -16,27 +16,27 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/AC_GALGAS_root.h"
-#include "galgas2/typeComparisonResult.h"
+#include "AC_GALGAS_root.h"
+#include "typeComparisonResult.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class GALGAS_uint ;
-class C_Compiler ;
+class Compiler ;
 class cSharedSortedListRoot ;
-class C_String ;
+class String ;
 class C_galgas_type_descriptor ;
 class capSortedListElement ;
 class cSortedListNode ;
 class capCollectionElementArray ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class AC_GALGAS_sortedlist : public AC_GALGAS_root {
 //--------------------------------- Private data member
@@ -53,7 +53,7 @@ class AC_GALGAS_sortedlist : public AC_GALGAS_root {
   public: AC_GALGAS_sortedlist & operator = (const AC_GALGAS_sortedlist &) ;
 
 //--------------------------------- Is Valid
-  public: VIRTUAL_IN_DEBUG bool isValid (void) const { return NULL != mSharedRoot ; }
+  public: VIRTUAL_IN_DEBUG bool isValid (void) const override { return nullptr != mSharedRoot ; }
 
 //--- count
   public: VIRTUAL_IN_DEBUG uint32_t count (void) const ;
@@ -62,11 +62,10 @@ class AC_GALGAS_sortedlist : public AC_GALGAS_root {
   protected: VIRTUAL_IN_DEBUG void createNewEmptySortedList (LOCATION_ARGS) ;
 
 //--------------------------------- Drop
-  public: VIRTUAL_IN_DEBUG void drop (void) ;
+  public: VIRTUAL_IN_DEBUG void drop (void) override ;
 
 //--------------------------------- Implementation of reader 'description'
-  public: virtual void description (C_String & ioString,
-                                     const int32_t inIndentation) const ;
+  public: virtual void description (String & ioString, const int32_t inIndentation) const override ;
 
 //--- Enumeration handling
   protected: void populateEnumerationArray (capCollectionElementArray & inEnumerationArray) const ;
@@ -79,11 +78,11 @@ class AC_GALGAS_sortedlist : public AC_GALGAS_root {
 
 //--------------------------------- Method Implementation
   protected: void smallestObjectAttributeList (capSortedListElement & outAttributeArray,
-                                                C_Compiler * inCompiler
+                                                Compiler * inCompiler
                                                 COMMA_LOCATION_ARGS) const ;
 
   protected: void greatestObjectAttributeList (capSortedListElement & outAttributeArray,
-                                                C_Compiler * inCompiler
+                                                Compiler * inCompiler
                                                 COMMA_LOCATION_ARGS) const ;
 
 //--------------------------------- Insulate
@@ -91,22 +90,22 @@ class AC_GALGAS_sortedlist : public AC_GALGAS_root {
 
 //--------------------------------- Modifier Implementation
   protected: void removeSmallestObject (capSortedListElement & outAttributeArray,
-                                         C_Compiler * inCompiler
+                                         Compiler * inCompiler
                                          COMMA_LOCATION_ARGS) ;
 
   protected: void removeGreatestObject (capSortedListElement & outAttributeArray,
-                                         C_Compiler * inCompiler
+                                         Compiler * inCompiler
                                          COMMA_LOCATION_ARGS) ;
 
 //--------------------------------- Compare
   public: typeComparisonResult objectCompare (const AC_GALGAS_sortedlist & inOperand) const ;
 
 //--------------------------------- Readers
-  public: VIRTUAL_IN_DEBUG GALGAS_uint getter_length (LOCATION_ARGS) const ;
+  public: VIRTUAL_IN_DEBUG GALGAS_uint getter_count (LOCATION_ARGS) const ;
 
 //--------------------------------- introspection
-  public: virtual const C_galgas_type_descriptor * staticTypeDescriptor (void) const  = 0;
+  public: virtual const C_galgas_type_descriptor * staticTypeDescriptor (void) const override = 0;
 
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

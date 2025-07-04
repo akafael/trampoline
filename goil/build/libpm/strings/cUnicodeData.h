@@ -108077,45 +108077,45 @@ static const uint8_t gPartNameConstruction [] = {
   0x1D, 0xE4,
 } ;
 
-const uint32_t kUnicodeNotAssigned =  0 ;
-const uint32_t kUnicodeCategory_Lu =  1 ; // Letter, Uppercase
-const uint32_t kUnicodeCategory_Ll =  2 ; // Letter, Lowercase
-const uint32_t kUnicodeCategory_Lt =  3 ; // Letter, Title Case
-const uint32_t kUnicodeCategory_Lm =  4 ; // Letter, Modifier
-const uint32_t kUnicodeCategory_Lo =  5 ; // Letter, Other
-const uint32_t kUnicodeCategory_Mn =  6 ; // Mark, Nonspacing
-const uint32_t kUnicodeCategory_Mc =  7 ; // Mark, Space Combining
-const uint32_t kUnicodeCategory_Me =  8 ; // Mark, Enclosing
-const uint32_t kUnicodeCategory_Nd =  9 ; // Number, Decimal Digit
-const uint32_t kUnicodeCategory_Nl = 10 ; // Number, Letter
-const uint32_t kUnicodeCategory_No = 11 ; // Number, Other
-const uint32_t kUnicodeCategory_Pc = 12 ; // Punctuation, Connector
-const uint32_t kUnicodeCategory_Pd = 13 ; // Punctuation, Dash
-const uint32_t kUnicodeCategory_Ps = 14 ; // Punctuation, Open
-const uint32_t kUnicodeCategory_Pe = 15 ; // Punctuation, Close
-const uint32_t kUnicodeCategory_Pi = 16 ; // Punctuation, initial quote
-const uint32_t kUnicodeCategory_Pf = 17 ; // Punctuation, Final quote
-const uint32_t kUnicodeCategory_Po = 18 ; // Punctuation, Other
-const uint32_t kUnicodeCategory_Sm = 19 ; // Symbol, Math
-const uint32_t kUnicodeCategory_Sc = 20 ; // Symbol, Currency
-const uint32_t kUnicodeCategory_Sk = 21 ; // Symbol, Modifier
-const uint32_t kUnicodeCategory_So = 22 ; // Symbol, Other
-const uint32_t kUnicodeCategory_Zs = 23 ; // Separator, Space
-const uint32_t kUnicodeCategory_Zl = 24 ; // Separator, Line
-const uint32_t kUnicodeCategory_Zp = 25 ; // Separator, Paragraph
-const uint32_t kUnicodeCategory_Cc = 26 ; // Other, Control
-const uint32_t kUnicodeCategory_Cf = 27 ; // Other, Format
-const uint32_t kUnicodeCategory_Cs = 28 ; // Other, Surrogate
-const uint32_t kUnicodeCategory_Co = 29 ; // Other, Private Use
+static const uint32_t kUnicodeNotAssigned =  0 ;
+static const uint32_t kUnicodeCategory_Lu =  1 ; // Letter, Uppercase
+static const uint32_t kUnicodeCategory_Ll =  2 ; // Letter, Lowercase
+static const uint32_t kUnicodeCategory_Lt =  3 ; // Letter, Title Case
+static const uint32_t kUnicodeCategory_Lm =  4 ; // Letter, Modifier
+static const uint32_t kUnicodeCategory_Lo =  5 ; // Letter, Other
+static const uint32_t kUnicodeCategory_Mn =  6 ; // Mark, Nonspacing
+static const uint32_t kUnicodeCategory_Mc =  7 ; // Mark, Space Combining
+static const uint32_t kUnicodeCategory_Me =  8 ; // Mark, Enclosing
+static const uint32_t kUnicodeCategory_Nd =  9 ; // Number, Decimal Digit
+static const uint32_t kUnicodeCategory_Nl = 10 ; // Number, Letter
+static const uint32_t kUnicodeCategory_No = 11 ; // Number, Other
+static const uint32_t kUnicodeCategory_Pc = 12 ; // Punctuation, Connector
+static const uint32_t kUnicodeCategory_Pd = 13 ; // Punctuation, Dash
+static const uint32_t kUnicodeCategory_Ps = 14 ; // Punctuation, Open
+static const uint32_t kUnicodeCategory_Pe = 15 ; // Punctuation, Close
+static const uint32_t kUnicodeCategory_Pi = 16 ; // Punctuation, initial quote
+static const uint32_t kUnicodeCategory_Pf = 17 ; // Punctuation, Final quote
+static const uint32_t kUnicodeCategory_Po = 18 ; // Punctuation, Other
+static const uint32_t kUnicodeCategory_Sm = 19 ; // Symbol, Math
+static const uint32_t kUnicodeCategory_Sc = 20 ; // Symbol, Currency
+static const uint32_t kUnicodeCategory_Sk = 21 ; // Symbol, Modifier
+static const uint32_t kUnicodeCategory_So = 22 ; // Symbol, Other
+static const uint32_t kUnicodeCategory_Zs = 23 ; // Separator, Space
+static const uint32_t kUnicodeCategory_Zl = 24 ; // Separator, Line
+static const uint32_t kUnicodeCategory_Zp = 25 ; // Separator, Paragraph
+static const uint32_t kUnicodeCategory_Cc = 26 ; // Other, Control
+static const uint32_t kUnicodeCategory_Cf = 27 ; // Other, Format
+// Other, Surrogate (unused kUnicodeCategory_Cs)
+static const uint32_t kUnicodeCategory_Co = 29 ; // Other, Private Use
 
-const uint32_t gNamePageSize = 256 ;
+static const uint32_t gNamePageSize = 256 ;
 
 //--- Entry definition:
 //  Bits 31...27: Category
 //  Bits 20...17: Decimal value (if any)
 //  Bits 16...0: Index of part name construction array
 
-const uint32_t kNameMask = 0x0001FFFF ;
+static const uint32_t kNameMask = 0x0001FFFF ;
 
 static const uint32_t gNamePage0 [256] = {
   1 | (kUnicodeCategory_Cc << 27), // "<control>", unicode 0x0

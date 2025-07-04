@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  'C_ColoredConsole' : a class for colored console output                                      
 //
 //  This file is part of libpm library                                                           
 //
-//  Copyright (C) 2011, ..., 2011 Pierre Molinaro.
+//  Copyright (C) 2011, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,43 +16,43 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include "C_ColoredConsole.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #include <stdio.h>
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #ifndef COMPILE_FOR_WINDOWS
   #error COMPILE_FOR_WINDOWS is undefined
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if COMPILE_FOR_WINDOWS == 1
   #include <windows.h>
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 static bool gTextAttributesAreUsed = true ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void C_ColoredConsole::setUseTextAttributes (const bool inUsesTextAttributes) {
   gTextAttributesAreUsed = inUsesTextAttributes ;
 }
   
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool C_ColoredConsole::usesTextAttributes (void) {
   return gTextAttributesAreUsed ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 // http://ascii-table.com/ansi-escape-sequences.php                                              
 //
@@ -62,7 +62,7 @@ bool C_ColoredConsole::usesTextAttributes (void) {
 //   http://www.adrianxw.dk/SoftwareSite/Consoles/Consoles3.html                                 
 //   http://www.adrianxw.dk/SoftwareSite/Consoles/Consoles4.html                                 
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if COMPILE_FOR_WINDOWS == 0
   void C_ColoredConsole::setForeColor (const consoleForeColorEnum inForeColor) {
@@ -81,25 +81,14 @@ bool C_ColoredConsole::usesTextAttributes (void) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if COMPILE_FOR_WINDOWS == 1
   void C_ColoredConsole::setForeColor (const consoleForeColorEnum /* inForeColor */) {
-    /* HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-      switch (inForeColor) {
-      case kBlackForeColor   : SetConsoleTextAttribute (hOut, 0) ; break ;
-      case kRedForeColor     : SetConsoleTextAttribute (hOut, FOREGROUND_RED) ; break ;
-      case kGreenForeColor   : SetConsoleTextAttribute (hOut, FOREGROUND_GREEN) ; break ;
-      case kYellowForeColor  : SetConsoleTextAttribute (hOut, FOREGROUND_GREEN | FOREGROUND_RED) ; break ;
-      case kBlueForeColor    : SetConsoleTextAttribute (hOut, FOREGROUND_BLUE) ; break ;
-      case kMagentaForeColor : SetConsoleTextAttribute (hOut, FOREGROUND_BLUE | FOREGROUND_RED) ; break ;
-      case kCyanForeColor    : SetConsoleTextAttribute (hOut, FOREGROUND_BLUE | FOREGROUND_GREEN) ; break ;
-      case kWhiteForeColor   : SetConsoleTextAttribute (hOut, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY) ; break ;
-      } */
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if COMPILE_FOR_WINDOWS == 0
   void C_ColoredConsole::setBackgroundColor (const consoleBackgroundColorEnum inBackgroundColor) {
@@ -118,14 +107,14 @@ bool C_ColoredConsole::usesTextAttributes (void) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if COMPILE_FOR_WINDOWS == 1
   void C_ColoredConsole::setBackgroundColor (const consoleBackgroundColorEnum /* inBackgroundColor */) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if COMPILE_FOR_WINDOWS == 0
   void C_ColoredConsole::setTextAttribute (const consoleTextAttributeEnum inTextAttribute) {
@@ -141,11 +130,11 @@ bool C_ColoredConsole::usesTextAttributes (void) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #if COMPILE_FOR_WINDOWS == 1
   void C_ColoredConsole::setTextAttribute (const consoleTextAttributeEnum /* inTextAttribute */) {
   }
 #endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

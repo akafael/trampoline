@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  cObjectArray                                                                                 
+//  cObjectArray
 //
-//  This file is part of libpm library                                                           
+//  This file is part of libpm library
 //
 //  Copyright (C) 2010, ..., 2010 Pierre Molinaro.
 //
@@ -16,17 +16,17 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/cObjectArray.h"
+#include "cObjectArray.h"
 #include "all-predefined-types.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cObjectArray::cObjectArray (const GALGAS_objectlist & inObjectList,
-                            C_Compiler * inCompiler
+                            Compiler * inCompiler
                             COMMA_LOCATION_ARGS) :
-mArray (NULL),
+mArray (nullptr),
 mCount (0) {
   mCount = inObjectList.count () ;
   macroMyNewArray (mArray, GALGAS_object, mCount) ;
@@ -35,19 +35,19 @@ mCount (0) {
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cObjectArray::~cObjectArray (void) {
   macroMyDeleteArray (mArray) ;
   mCount = 0 ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 GALGAS_object cObjectArray::objectAtIndex (const uint32_t inIndex
                                            COMMA_LOCATION_ARGS) const {
-  MF_AssertThere (inIndex < mCount, "inIndex (%ld) >= mCount (%ld)", inIndex, mCount) ;
+  macroAssertThere (inIndex < mCount, "inIndex (%ld) >= mCount (%ld)", inIndex, mCount) ;
   return mArray [inIndex] ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

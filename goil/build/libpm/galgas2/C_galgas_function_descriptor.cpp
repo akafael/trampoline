@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  GALGAS introspection classes                                                                 
+//  GALGAS introspection classes
 //
-//  This file is part of libpm library                                                           
+//  This file is part of libpm library
 //
 //  Copyright (C) 2009, ..., 2010 Pierre Molinaro.
 //
@@ -16,19 +16,19 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/C_galgas_function_descriptor.h"
+#include "C_galgas_function_descriptor.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  GALGAS function descriptor (for function introspection)                                      
+//  GALGAS function descriptor (for function introspection)
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-static C_galgas_function_descriptor * gGalgasFunctionListRoot = NULL ;
+static C_galgas_function_descriptor * gGalgasFunctionListRoot = nullptr ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 C_galgas_function_descriptor::
 C_galgas_function_descriptor (const char * inFunctionName,
@@ -45,10 +45,10 @@ mFormalParameterTypeList (inParameterTypeList) {
   gGalgasFunctionListRoot = this ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 C_galgas_function_descriptor * C_galgas_function_descriptor::functionListRoot (void) {
   return gGalgasFunctionListRoot ;
-} 
+}
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

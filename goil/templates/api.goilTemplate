@@ -11,9 +11,6 @@ let APIUSED += APIMAP["interrupt"]
 #
 # Check and generate system calls
 #
-if [TRANSACTION length] > 0 then
-let APIUSED += APIMAP["stm"]
-end if
 if [TASKS length] > 0 then
   let APIUSED += APIMAP["task"]
 end if
@@ -66,6 +63,10 @@ if ioc_queued_count > 0 then
 end if
 if ioc_unqueued_count > 0 then
   let APIUSED += APIMAP["ioc_unqueued"]
+end if
+
+if OS::IDLE_POWER_MODE != "ACTIVE" then
+  let APIUSED += APIMAP["low_power"]
 end if
 
 if OS::SYSTEM_CALL then

@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  AC_GALGAS_enumAssociatedValues : class for enum associated values                            
+//  AC_GALGAS_enumAssociatedValues : class for enum associated values
 //
-//  This file is part of libpm library                                                           
+//  This file is part of libpm library
 //
 //  Copyright (C) 2014, ..., 2014 Pierre Molinaro.
 //
@@ -16,36 +16,36 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/AC_GALGAS_enumAssociatedValues.h"
+#include "AC_GALGAS_enumAssociatedValues.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 cEnumAssociatedValues::cEnumAssociatedValues (LOCATION_ARGS) :
-C_SharedObject (THERE) {
+SharedObject (THERE) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_enumAssociatedValues::AC_GALGAS_enumAssociatedValues (void) :
-mSharedPtr (NULL) {
+mSharedPtr (nullptr) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void AC_GALGAS_enumAssociatedValues::setPointer (const cEnumAssociatedValues * inUniquePtr)  {
   macroAssignSharedObject (mSharedPtr, inUniquePtr) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_enumAssociatedValues::AC_GALGAS_enumAssociatedValues (const AC_GALGAS_enumAssociatedValues & inSource) :
-mSharedPtr (NULL) {
+mSharedPtr (nullptr) {
   macroAssignSharedObject (mSharedPtr, inSource.mSharedPtr) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_enumAssociatedValues & AC_GALGAS_enumAssociatedValues::operator = (const AC_GALGAS_enumAssociatedValues & inSource) {
   if (mSharedPtr != inSource.mSharedPtr) {
@@ -54,23 +54,23 @@ AC_GALGAS_enumAssociatedValues & AC_GALGAS_enumAssociatedValues::operator = (con
   return *this ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 AC_GALGAS_enumAssociatedValues::~ AC_GALGAS_enumAssociatedValues (void) {
   macroDetachSharedObject (mSharedPtr) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-void AC_GALGAS_enumAssociatedValues::description (C_String & ioString,
+void AC_GALGAS_enumAssociatedValues::description (String & ioString,
                                                   const int32_t inIndentation) const {
-  if (NULL != mSharedPtr) {
+  if (nullptr != mSharedPtr) {
     macroValidSharedObject (mSharedPtr, cEnumAssociatedValues) ;
     mSharedPtr->description (ioString, inIndentation) ;
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typeComparisonResult AC_GALGAS_enumAssociatedValues::objectCompare (const AC_GALGAS_enumAssociatedValues & inOperand) const {
   typeComparisonResult result = kOperandEqual ;
@@ -81,4 +81,4 @@ typeComparisonResult AC_GALGAS_enumAssociatedValues::objectCompare (const AC_GAL
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

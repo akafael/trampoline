@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  cPtr_weakReference_proxy : Base class for reference class class
 //
 //  This file is part of libpm library
 //
-//  Copyright (C) 2021, ..., 2021 Pierre Molinaro.
+//  Copyright (C) 2021, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,21 +16,21 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/acPtr_class.h"
+#include "acPtr_class.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class acStrongPtr_class ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class cPtr_weakReference_proxy : public acPtr_class {
+class cPtr_weakReference_proxy final : public acPtr_class {
 //--- Public default constructor
   public: cPtr_weakReference_proxy (LOCATION_ARGS) ;
 
@@ -42,7 +42,7 @@ class cPtr_weakReference_proxy : public acPtr_class {
   public: acStrongPtr_class * strongObject (void) const { return mStrongObjectPtr ; }
 
 //--- Virtual methods from acPtr_class
-  public: virtual void description (C_String &, const int32_t) const {} // Never invoked
+  public: virtual void description (String &, const int32_t) const {} // Never invoked
 
   public: virtual typeComparisonResult dynamicObjectCompare (const acPtr_class *) const { // Never invoked
     return typeComparisonResult::kOperandNotValid ;
@@ -60,4 +60,4 @@ class cPtr_weakReference_proxy : public acPtr_class {
   friend class acStrongPtr_class ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

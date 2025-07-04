@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  AC_GALGAS_reference_class : base class for reference class objects
 //
 //  This file is part of libpm library
 //
-//  Copyright (C) 2021, ..., 2021 Pierre Molinaro.
+//  Copyright (C) 2021, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,21 +16,21 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/AC_GALGAS_root.h"
+#include "AC_GALGAS_root.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class C_String ;
+class String ;
 class C_galgas_type_descriptor ;
 class acStrongPtr_class ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class AC_GALGAS_reference_class : public AC_GALGAS_root { // AC_GALGAS_reference_class est une classe abstraite
 //--- Properties
@@ -39,28 +39,32 @@ class AC_GALGAS_reference_class : public AC_GALGAS_root { // AC_GALGAS_reference
 
 //--- Default constructor
   protected: AC_GALGAS_reference_class (void) ;
-  
+
 //--- Constructor from pointer
   protected: AC_GALGAS_reference_class (const acStrongPtr_class * inPointer) ;
-  
+
 //--- Destructor
   protected: virtual ~ AC_GALGAS_reference_class (void) ;
 
 //--- Is valid
-  public: virtual bool isValid (void) const { return NULL != mObjectPtr ; }
-  
+  public: virtual bool isValid (void) const { return nullptr != mObjectPtr ; }
+
 //--- Drop
   public: virtual void drop (void) ;
-  
+
 //--- Handle copy
   protected: AC_GALGAS_reference_class (const AC_GALGAS_reference_class & inSource) ;
   protected: AC_GALGAS_reference_class & operator = (const AC_GALGAS_reference_class & inSource) ;
-  
+
 //--- Dynamic Type Descriptor
   public: virtual const C_galgas_type_descriptor * dynamicTypeDescriptor (void) const ;
 
-  public: virtual void description (C_String & ioString,
+  public: virtual void description (String & ioString,
                                     const int32_t inIndentation) const ;
+
+  #ifndef DO_NOT_GENERATE_CHECKINGS
+    public: virtual void printNonNullClassInstanceProperties (const char * inPropertyName) const ;
+  #endif
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

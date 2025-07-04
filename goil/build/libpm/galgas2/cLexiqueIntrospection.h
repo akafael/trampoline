@@ -1,10 +1,10 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  Lexique introspection                                                                        
 //
 //  This file is part of libpm library                                                           
 //
-//  Copyright (C) 2016, ..., 2016 Pierre Molinaro.
+//  Copyright (C) 2016, ..., 2023 Pierre Molinaro.
 //
 //  e-mail : pierre@pcmolinaro.name
 //
@@ -16,36 +16,36 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "strings/C_String.h"
+#include "String-class.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-typedef void (* Type_appendKeywordListNames) (TC_UniqueArray <C_String> & ioList) ;
+typedef void (* Type_appendKeywordListNames) (TC_UniqueArray <String> & ioList) ;
 
-typedef void (* Type_getKeywordsForIdentifier) (const C_String & inIdentifier,
+typedef void (* Type_getKeywordsForIdentifier) (const String & inIdentifier,
                                                 bool & ioFound,
-                                                TC_UniqueArray <C_String> & ioList) ;
+                                                TC_UniqueArray <String> & ioList) ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class cLexiqueIntrospection {
+class cLexiqueIntrospection final {
 //--- Constructor
   public: cLexiqueIntrospection (Type_appendKeywordListNames appendKeywordListNames,
-                                  Type_getKeywordsForIdentifier getKeywordsForIdentifier) ;
+                                 Type_getKeywordsForIdentifier getKeywordsForIdentifier) ;
 
 //--- Accessors
-  public: static void getKeywordListNames (TC_UniqueArray <C_String> & outList) ;
-  public: static void getKeywordListForIdentifier (const C_String & inIdentifier,
-                                                    bool & outFound,
-                                                    TC_UniqueArray <C_String> & outList) ;
+  public: static void getKeywordListNames (TC_UniqueArray <String> & outList) ;
+  public: static void getKeywordListForIdentifier (const String & inIdentifier,
+                                                   bool & outFound,
+                                                   TC_UniqueArray <String> & outList) ;
 
-  public: static void handleGetKeywordListOption (class C_Compiler * inCompiler) ;
+  public: static void handleGetKeywordListOption (class Compiler * inCompiler) ;
 
 //--- No copy
   private: cLexiqueIntrospection (const cLexiqueIntrospection &) ;
@@ -57,4 +57,4 @@ class cLexiqueIntrospection {
   private: Type_getKeywordsForIdentifier mGetKeywordsForIdentifier ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

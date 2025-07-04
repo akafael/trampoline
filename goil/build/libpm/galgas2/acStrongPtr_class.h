@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
 //  acStrongPtr_class : Base class for reference class class
 //
@@ -16,21 +16,27 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/acPtr_class.h"
+#include "acPtr_class.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class cPtr_weakReference_proxy ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 class acStrongPtr_class : public acPtr_class {
+//--- Properties
+  #ifndef DO_NOT_GENERATE_CHECKINGS
+    private: acStrongPtr_class * mPreviousPtr ;
+    private: acStrongPtr_class * mNextPtr ;
+  #endif
+
 //--- Default constructor
   public: acStrongPtr_class (LOCATION_ARGS) ;
 
@@ -49,6 +55,12 @@ class acStrongPtr_class : public acPtr_class {
 
 //--- Friend
   friend class cPtr_weakReference_proxy ;
+
+//--- Print all existing objects
+  #ifndef DO_NOT_GENERATE_CHECKINGS
+    public: static void printExistingClassInstances (void) ;
+    public: virtual void printNonNullClassInstanceProperties (void) const ;
+  #endif
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

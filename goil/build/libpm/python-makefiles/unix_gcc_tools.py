@@ -1,15 +1,15 @@
-#! /usr/bin/env python
+#! /usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-#----------------------------------------------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------
 
 import sys, time, os, json
 import makefile, default_build_options
 import generic_galgas_makefile
 
-#----------------------------------------------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------
 
-def buildForUnix (dictionary, jsonFilePath, EXECUTABLE, GOAL, maxParallelJobs, displayCommands) :
+def buildForUnix (dictionary, jsonFilePath, EXECUTABLE, BUILD_DIR_NAME, GOAL, maxParallelJobs, displayCommands) :
   gmf = generic_galgas_makefile.GenericGalgasMakefile ()
   gmf.mJSONfilePath = jsonFilePath
   gmf.mDictionary = dictionary
@@ -18,21 +18,24 @@ def buildForUnix (dictionary, jsonFilePath, EXECUTABLE, GOAL, maxParallelJobs, d
   gmf.mMaxParallelJobs = maxParallelJobs
   gmf.mDisplayCommands = displayCommands
   gmf.mTargetName = "unix"
+  gmf.mBuildDirName = BUILD_DIR_NAME
 #---
   gmf.mCompilerTool = ["gcc"]
   gmf.mLinkerTool   = ["g++"]
   gmf.mStripTool    = ["strip"]
   gmf.mSudoTool     = ["sudo"]
 
-#   gmf.mCompilerTool = ["/usr/local/Cellar/gcc/10.2.0/bin/gcc-10"]
-#   gmf.mLinkerTool   = ["/usr/local/Cellar/gcc/10.2.0/bin/g++-10"]
-#   gmf.mStripTool    = ["strip"]
-#   gmf.mSudoTool     = ["sudo"]
-
   gmf.mCompilationMessage = "Compiling for Unix"
   gmf.mLinkingMessage = "Linking for Unix"
   gmf.mInstallationgMessage = "Installing"
   gmf.mStripMessage = "Stripping"
+
+  if (os.name == "nt") or sys.platform.startswith ("cygwin") : # Cygwin
+    gmf.mLinkerOptions = ["-lComdlg32"]
+    gmf.mExecutableSuffix = ".exe"
+    gmf.mCompilationMessage = "Compiling for Cygwin"
+    gmf.mLinkingMessage = "Linking for Cygwin"
+
 #--- Options for all compilers
   gmf.mAllCompilerOptions = default_build_options.allCompilerOptions (["-Wconversion"])
 #--- Options for release mode
@@ -50,4 +53,4 @@ def buildForUnix (dictionary, jsonFilePath, EXECUTABLE, GOAL, maxParallelJobs, d
 #--- Run makefile
   gmf.run ()
 
-#----------------------------------------------------------------------------------------------------------------------*
+#-----------------------------------------------------------------------------------------

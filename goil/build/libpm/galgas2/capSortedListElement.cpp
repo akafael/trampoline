@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //
-//  GALGAS_enumerable : Base class for GALGAS enumerable object                                  
+//  GALGAS_enumerable : Base class for GALGAS enumerable object
 //
-//  This file is part of libpm library                                                           
+//  This file is part of libpm library
 //
 //  Copyright (C) 2010, ..., 2010 Pierre Molinaro.
 //
@@ -16,55 +16,55 @@
 //  warranty of MERCHANDIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
 //  more details.
 //
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "galgas2/capSortedListElement.h"
-#include "galgas2/cSortedListElement.h"
-#include "strings/C_String.h"
+#include "capSortedListElement.h"
+#include "cSortedListElement.h"
+#include "String-class.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 capSortedListElement::capSortedListElement (void) :
-mPtr (NULL) {
+mPtr (nullptr) {
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void capSortedListElement::setPointer (cSortedListElement * inObjectPointer) {
   macroAssignSharedObject (mPtr, inObjectPointer) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 capSortedListElement::~ capSortedListElement (void) {
   macroDetachSharedObject (mPtr) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 capSortedListElement::capSortedListElement (const capSortedListElement & inSource) :
-mPtr (NULL) {
+mPtr (nullptr) {
   macroAssignSharedObject (mPtr, inSource.mPtr) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 capSortedListElement & capSortedListElement::operator = (const capSortedListElement & inSource) {
   macroAssignSharedObject (mPtr, inSource.mPtr) ;
   return * this ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 bool capSortedListElement::isValid (void) const {
-  bool result = NULL != mPtr ;
+  bool result = nullptr != mPtr ;
   if (result) {
     result = mPtr->isValid () ;
   }
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typeComparisonResult capSortedListElement::compare (capSortedListElement & inOperand) {
   macroValidSharedObject (mPtr, cSortedListElement) ;
@@ -72,7 +72,7 @@ typeComparisonResult capSortedListElement::compare (capSortedListElement & inOpe
   return mPtr->compare (inOperand.mPtr) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 capSortedListElement capSortedListElement::copy (void) {
   capSortedListElement result ;
@@ -83,41 +83,41 @@ capSortedListElement capSortedListElement::copy (void) {
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void capSortedListElement::drop (void) {
   macroDetachSharedObject (mPtr) ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 void capSortedListElement::insulate (void) {
-  if ((NULL != mPtr) && !mPtr->isUniquelyReferenced ()) {
+  if ((nullptr != mPtr) && !mPtr->isUniquelyReferenced ()) {
     cSortedListElement * p = (cSortedListElement *) mPtr->copy () ;
     macroValidSharedObject (p, cSortedListElement) ;
-    macroAssignSharedObject (mPtr, p) ;  
+    macroAssignSharedObject (mPtr, p) ;
     macroDetachSharedObject (p) ;
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-void capSortedListElement::description (C_String & ioString, const int32_t inIndentation) const {
-  if (NULL == mPtr) {
-    ioString << "NULL" ;
+void capSortedListElement::description (String & ioString, const int32_t inIndentation) const {
+  if (nullptr == mPtr) {
+    ioString.appendCString ("NULL") ;
   }else{
     mPtr->description (ioString, inIndentation) ;
   }
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 typeComparisonResult capSortedListElement::compareForSorting (const capSortedListElement & inOperand) {
   typeComparisonResult result = kOperandNotValid ;
-  if ((NULL != mPtr) && (NULL != inOperand.mPtr)) {
+  if ((nullptr != mPtr) && (nullptr != inOperand.mPtr)) {
     result = mPtr->compareForSorting (inOperand.mPtr) ;
   }
   return result ;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

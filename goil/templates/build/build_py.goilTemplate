@@ -42,7 +42,7 @@ if exists POSTBUILD then
   let postgoals := mapof exists POSTBUILD default ( @() ) by NAME
 end if
 
-%#! /usr/bin/env python
+%#! /usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #----------------------------------------------------------------------
 #--- Python Build file for application % !CPUNAME %
@@ -61,7 +61,7 @@ end if
 #---     build.py is generated each time goil is called by make.py
 #----------------------------------------------------------------------
 
-import sys, os, subprocess, string, distutils.spawn
+import sys, os, subprocess, string
 from string import Template
 
 #--- Add some function for Python3 support
@@ -197,18 +197,37 @@ foreach flags in exists OS::BUILD_S::PRECOMMONFLAGS default ( @() ) do
 precflags += "% !flags::VALUE %".split()
 precppflags += "% !flags::VALUE %".split()%
 end foreach
+
 #include dirs
 
-let MACHINESPATH := OS::BUILD_S::TRAMPOLINE_BASE_PATH+"/machines"
-foreach platform in exists PLATFORM_FILES default ( @() ) do%
+let MACHINESPATH := OS::BUILD_S::TRAMPOLINE_BASE_PATH + "/machines"
+foreach platform in exists PLATFORM_FILES default ( @() ) do
+  let condPlat := true
+  if exists platform::IF then
+    if [platform::IF type] == @string then
+      let OSasMap := [OS map]
+      let condPlat := exists OSasMap[platform::IF] default (false)
+    end if
+  end if
+  if condPlat then
+%
 includeDirs += ["-I","% !MACHINESPATH + "/" + platform::PATH %"]%
+  end if
 end foreach
-foreach library in exists USEDLIB default ( @() ) do%
+
+let GLOBAL_LIB_PATH := OS::BUILD_S::TRAMPOLINE_BASE_PATH + "/libraries/"
+
+foreach library in exists USEDLIB default ( @() ) do
+  if library::GLOBAL == true then%
+includeDirs += ["-I","% !GLOBAL_LIB_PATH + library::PATH %"]%
+  else%
 includeDirs += ["-I","% !MACHINESPATH + "/" + library::PATH %"]%
+  end if
 end foreach
 %
 if with_ioc:
   includeDirs += ["-I", "% !OS::BUILD_S::TRAMPOLINE_BASE_PATH %/ioc"]
+includeDirs += ["-I", "% !OS::BUILD_S::TRAMPOLINE_BASE_PATH %/com"]
 includeDirs += ["-I", "% !OS::BUILD_S::TRAMPOLINE_BASE_PATH %/os"]
 includeDirs += ["-I", "% !OS::BUILD_S::TRAMPOLINE_BASE_PATH %/debug"]
 includeDirs += ["-I", "% !PROJECT %"]
@@ -413,10 +432,7 @@ else
 %
 cSourceList.append(projfile.ProjectFile("% !PROJECT %/tpl_os.c"))%
 end if
-if [TRANSACTION length] > 0 then
-%
-cSourceList.append(projfile.ProjectFile("% !PROJECT %/stm_structure.c"))%
-end if
+
 if [IOC length] > 0 then
 %
 cSourceList.append(projfile.ProjectFile("% !PROJECT %/tpl_ioc_api_config.c"))%
@@ -434,39 +450,54 @@ sSourceList.append(projfile.ProjectFile("% !PROJECT+"/"+file::VALUE %"))%
   end foreach
 end foreach
 foreach platform in exists PLATFORM_FILES default ( @() ) do
-  if not exists platform::CFILE then let platform::CFILE := @() end if
-  if not exists platform::CPPFILE then let platform::CPPFILE := @() end if
-  if not exists platform::ASFILE then let platform::ASFILE := @() end if
-  foreach file in platform::CFILE do
+  let condPlat := true
+  if exists platform::IF then
+    if [platform::IF type] == @string then
+      let OSasMap := [OS map]
+      let condPlat := exists OSasMap[platform::IF] default (false)
+    end if
+  end if
+  if condPlat then
+    if not exists platform::CFILE then let platform::CFILE := @() end if
+    if not exists platform::CPPFILE then let platform::CPPFILE := @() end if
+    if not exists platform::ASFILE then let platform::ASFILE := @() end if
+    foreach file in platform::CFILE do
 %
 cSourceList.append(projfile.ProjectFile("% !"machines/"+platform::PATH+"/"+file::VALUE %", trampoline_base_path))%
-  end foreach
-  foreach file in platform::CPPFILE do
+    end foreach
+    foreach file in platform::CPPFILE do
 %
 cppSourceList.append(projfile.ProjectFile("% !"machines/"+platform::PATH+"/"+file::VALUE %", trampoline_base_path))%
-  end foreach
-  foreach file in platform::ASFILE do
+    end foreach
+    foreach file in platform::ASFILE do
 %
 sSourceList.append(projfile.ProjectFile("% !"machines/"+platform::PATH+"/"+file::VALUE %", trampoline_base_path))%
-  end foreach
+    end foreach
+  end if
 end foreach
 
-# add the libraries
+#--- add the libraries
 foreach library in exists USEDLIB default ( @() ) do
   if not exists library::CFILE then let library::CFILE := @() end if
   if not exists library::CPPFILE then let library::CPPFILE := @() end if
   if not exists library::ASFILE then let library::ASFILE := @() end if
+  let libpath := ""
+  if library::GLOBAL then
+    let libpath := "libraries/" + library::PATH + "/"
+  else
+    let libpath := "machines/" + library::PATH + "/"
+  end if
   foreach file in library::CFILE do
 %
-cSourceList.append(projfile.ProjectFile("% !"machines/"+library::PATH+"/"+file::VALUE %", trampoline_base_path))%
+cSourceList.append(projfile.ProjectFile("% !libpath + file::VALUE %", trampoline_base_path))%
   end foreach
   foreach file in library::CPPFILE do
 %
-cppSourceList.append(projfile.ProjectFile("% !"machines/"+library::PATH+"/"+file::VALUE %", trampoline_base_path))%
+cppSourceList.append(projfile.ProjectFile("% !libpath + file::VALUE %", trampoline_base_path))%
   end foreach
   foreach file in library::ASFILE do
 %
-sSourceList.append(projfile.ProjectFile("% !"machines/"+library::PATH+"/"+file::VALUE %", trampoline_base_path))%
+sSourceList.append(projfile.ProjectFile("% !libpath + file::VALUE %", trampoline_base_path))%
   end foreach
 end foreach
 %

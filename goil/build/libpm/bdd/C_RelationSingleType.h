@@ -3,42 +3,42 @@
 //  galgas-developer
 //
 //  Created by Pierre Molinaro on 22/05/14.
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 #pragma once
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-#include "strings/C_String.h"
+#include "String-class.h"
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-class C_RelationSingleType {
+class C_RelationSingleType final {
 //--- Internal class
   public: class cType ;
 
 //--- Default constructor
-  public: inline C_RelationSingleType (void) : mTypePtr (NULL) {}
+  public: inline C_RelationSingleType (void) : mTypePtr (nullptr) {}
 
 //--- Constructor with an enumerated type
-  public: C_RelationSingleType (const C_String & inTypeName,
-                                 const TC_UniqueArray <C_String> & inConstantNameArray
+  public: C_RelationSingleType (const String & inTypeName,
+                                 const TC_UniqueArray <String> & inConstantNameArray
                                  COMMA_LOCATION_ARGS) ;
 
 //--- Constructor with an unsigned type
-  public: C_RelationSingleType (const C_String & inTypeName,
+  public: C_RelationSingleType (const String & inTypeName,
                                  const uint32_t inValueCount // [0, inValueCount - 1]
                                  COMMA_LOCATION_ARGS) ;
 
 //--- Accessors
-  public: C_String typeName (void) const ;
+  public: String typeName (void) const ;
   public: uint32_t BDDBitCount (void) const ;
   public: uint32_t constantCount (void) const ;
-  public: C_String nameForValue (const uint32_t inIndex
+  public: String nameForValue (const uint32_t inIndex
                                   COMMA_LOCATION_ARGS) const ;
 
 //--- Destructor
-  public: virtual ~ C_RelationSingleType (void) ;
+  public: ~ C_RelationSingleType (void) ;
 
 //--- Handling copy
   public: C_RelationSingleType (const C_RelationSingleType & inSource) ;
@@ -53,4 +53,4 @@ class C_RelationSingleType {
   private: cType * mTypePtr ;
 } ;
 
-//----------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
